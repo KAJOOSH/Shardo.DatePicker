@@ -1,13 +1,8 @@
-<h1 dir="rtl">Shardo Date Picker</h1>
-
 <p dir="rtl">
   <strong>Shardo Date Picker</strong> یک انتخاب‌گر تاریخ شمسی/جلالی برای پروژه‌های فارسی است.
   این پکیج به کاربر اجازه می‌دهد تاریخ، زمان یا بازهٔ تاریخ را به صورت شمسی انتخاب کند و هم‌زمان مقدار میلادی مناسب برای ارسال به سرور را نیز دریافت کنید.
 </p>
 
-<p dir="rtl">
-  این ابزار برای فرم‌های نوبت‌دهی، رزرو، گزارش‌گیری، فیلترهای تاریخ، پنل‌های مدیریتی و هر رابط کاربری فارسی که به تاریخ شمسی نیاز دارد مناسب است.
-</p>
 
 <p dir="ltr">
   <img alt="JavaScript" src="https://img.shields.io/badge/JavaScript-ES%20Modules-f7df1e">
@@ -17,25 +12,6 @@
   <img alt="License" src="https://img.shields.io/badge/License-MIT-green">
 </p>
 
----
-
-<h2 dir="rtl">بخش‌های مستندات</h2>
-
-<p dir="rtl">
-  <a href="#معرفی">معرفی</a> ·
-  <a href="#قابلیتها">قابلیت‌ها</a> ·
-  <a href="#نصب">نصب</a> ·
-  <a href="#شروع-سریع">شروع سریع</a> ·
-  <a href="#انتخاب-بازه-تاریخ">انتخاب بازه تاریخ</a> ·
-  <a href="#استفاده-با-javascript">استفاده با JavaScript</a> ·
-  <a href="#رویدادها">رویدادها</a> ·
-  <a href="#تنظیمات">تنظیمات</a> ·
-  <a href="#api">API</a> ·
-  <a href="#تست">تست</a> ·
-  <a href="#لایسنس">لایسنس</a>
-</p>
-
----
 
 <h2 id="معرفی" dir="rtl">معرفی</h2>
 
@@ -55,7 +31,7 @@
 </p>
 
 ---
-
+<div dir="rtl">
 <h2 id="قابلیتها" dir="rtl">قابلیت‌ها</h2>
 
 <table dir="rtl">
@@ -96,6 +72,7 @@
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
 
@@ -105,12 +82,6 @@
 
 ```bash
 npm install
-```
-
-<h3 dir="rtl">نصب از npm</h3>
-
-```bash
-npm install shardo-datepicker
 ```
 
 <h3 dir="rtl">Import در پروژه</h3>
@@ -153,7 +124,7 @@ import "shardo-datepicker/ShardoDatePicker.css";
 
 <script type="module" src="./src/ShardoDatePicker.js"></script>
 ```
-
+<div dir="rtl">
 <h3 dir="rtl">خروجی این مثال</h3>
 
 <table dir="rtl">
@@ -182,6 +153,7 @@ import "shardo-datepicker/ShardoDatePicker.css";
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
 
@@ -268,7 +240,7 @@ input.addEventListener("shardo-datepicker:change", (event) => {
   console.log(event.detail.jalali);
 });
 ```
-
+<div dir="rtl">
 <h3 dir="rtl">لیست رویدادها</h3>
 
 <table dir="rtl">
@@ -342,6 +314,7 @@ input.addEventListener("shardo-datepicker:change", (event) => {
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
 
@@ -355,7 +328,7 @@ input.addEventListener("shardo-datepicker:change", (event) => {
   data-shardo-datepicker-disabled-dates="1405/01/13,1405/02/20"
 >
 ```
-
+<div dir="rtl">
 <table dir="rtl">
   <thead>
     <tr>
@@ -378,6 +351,7 @@ input.addEventListener("shardo-datepicker:change", (event) => {
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
 
@@ -415,7 +389,7 @@ input.addEventListener("shardo-datepicker:change", (event) => {
   --shardo-datepicker-font: Vazirmatn, IRANSans, Tahoma, Arial, sans-serif;
 }
 ```
-
+<div dir="rtl">
 <h3 dir="rtl">حالت‌های تم</h3>
 
 <table dir="rtl">
@@ -501,6 +475,7 @@ input.addEventListener("shardo-datepicker:change", (event) => {
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
 
@@ -531,7 +506,7 @@ data-shardo-datepicker-show-time
   data-shardo-datepicker-disabled-dates="1405/01/13,1405/02/15"
 >
 ```
-
+<div dir="rtl">
 <h3 dir="rtl">تنظیمات اصلی</h3>
 
 <table dir="rtl">
@@ -842,9 +817,10 @@ data-shardo-datepicker-show-time
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
-
+<div dir="rtl">
 <h2 id="فرمت-تاریخ" dir="rtl">فرمت تاریخ</h2>
 
 <h3 dir="rtl">توکن‌های format و gregorianFormat</h3>
@@ -924,9 +900,10 @@ data-shardo-datepicker-show-time
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
-
+<div dir="rtl">
 <h2 id="api" dir="rtl">API</h2>
 
 <table dir="rtl">
@@ -971,6 +948,7 @@ data-shardo-datepicker-show-time
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
 
@@ -1012,7 +990,7 @@ tests/e2e/shardo-datepicker-user.spec.mjs
 ```text
 tests/fixtures/user-settings.html
 ```
-
+<div dir="rtl">
 <h3 dir="rtl">پوشش تست‌ها</h3>
 
 <table dir="rtl">
@@ -1073,31 +1051,10 @@ tests/fixtures/user-settings.html
     </tr>
   </tbody>
 </table>
+</div>
 
 ---
-
-<h2 id="موضوعات-github" dir="rtl">موضوعات پیشنهادی GitHub</h2>
-
-<p dir="rtl">
-  برای بهتر دیده شدن پروژه در GitHub، می‌توانید Topicهای زیر را اضافه کنید:
-</p>
-
-<p dir="ltr">
-  <code>datepicker</code>
-  <code>jalali</code>
-  <code>jalali-datepicker</code>
-  <code>persian-calendar</code>
-  <code>persian-date</code>
-  <code>shamsi-date-picker</code>
-  <code>rtl</code>
-  <code>javascript</code>
-  <code>bootstrap</code>
-  <code>date-range-picker</code>
-  <code>calendar</code>
-</p>
-
----
-
+<div dir="rtl">
 <h2 id="مشارکت" dir="rtl">مشارکت</h2>
 
 <p dir="rtl">
@@ -1131,6 +1088,7 @@ tests/fixtures/user-settings.html
     </tr>
   </tbody>
 </table>
+</div>
 
 ```bash
 npm test
@@ -1143,8 +1101,4 @@ npm test
 <p dir="rtl">
   این پروژه به صورت عمومی، رایگان و متن‌باز منتشر می‌شود.
   استفاده، کپی، تغییر، انتشار و توزیع آن تحت مجوز <strong>MIT</strong> آزاد است.
-</p>
-
-<p dir="rtl">
-  متن کامل مجوز در فایل <code dir="ltr">LICENSE</code> قرار می‌گیرد.
 </p>
