@@ -37,3 +37,4 @@ Thumbs.db
 # CSS preprocessors / generated files
 *.css.map
 *.scss.cache
+/.vs
