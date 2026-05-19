@@ -1,0 +1,31 @@
+﻿{
+  "name": "shardo-datepicker",
+  "version": "1.0.0",
+  "description": "Shardo Date Picker, a dependency-free Jalali date and date-range picker written in vanilla JavaScript.",
+  "type": "module",
+  "main": "src/ShardoDatePicker.js",
+  "scripts": {
+    "demo": "node scripts/serve.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "node --test tests/*.test.mjs",
+    "test:e2e": "playwright test",
+    "prepublishOnly": "npm run check && npm test"
+  },
+  "keywords": [
+    "shardo-datepicker",
+    "jalali",
+    "persian",
+    "datepicker",
+    "datetimepicker",
+    "vanilla-js"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}
+
+
+

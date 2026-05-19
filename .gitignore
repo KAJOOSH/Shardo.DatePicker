@@ -1,5 +1,6 @@
 ﻿# dependencies
 node_modules/
+/.vs
 
 # build outputs
 dist/
@@ -37,4 +38,4 @@ Thumbs.db
 # CSS preprocessors / generated files
 *.css.map
 *.scss.cache
-/.vs
+

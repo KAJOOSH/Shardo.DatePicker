@@ -1,0 +1,642 @@
+:root {
+  --shardo-datepicker-bg: #ffffff;
+  --shardo-datepicker-fg: #172033;
+  --shardo-datepicker-muted: #667085;
+  --shardo-datepicker-muted-soft: #98a2b3;
+  --shardo-datepicker-border: #d6dce7;
+  --shardo-datepicker-border-strong: #b9c3d2;
+  --shardo-datepicker-soft: #f5f7fa;
+  --shardo-datepicker-soft-strong: #e8edf4;
+  --shardo-datepicker-control-bg: #ffffff;
+  --shardo-datepicker-input-bg: linear-gradient(180deg, #ffffff, #fbfcfe);
+  --shardo-datepicker-control-hover-bg: #fbfcfd;
+  --shardo-datepicker-primary: #0f766e;
+  --shardo-datepicker-primary-dark: #115e59;
+  --shardo-datepicker-primary-soft: #e5f4f2;
+  --shardo-datepicker-primary-range: #edf8f6;
+  --shardo-datepicker-primary-range-border: #d4eeea;
+  --shardo-datepicker-primary-preview: #f0fbf9;
+  --shardo-datepicker-primary-preview-border: #d9f2ee;
+  --shardo-datepicker-primary-preview-end: #dff3ef;
+  --shardo-datepicker-primary-fg: #ffffff;
+  --shardo-datepicker-danger: #b42318;
+  --shardo-datepicker-danger-soft: #fff5f5;
+  --shardo-datepicker-danger-border: #ffd5d2;
+  --shardo-datepicker-focus-shadow: rgba(15, 118, 110, 0.16);
+  --shardo-datepicker-shadow: 0 24px 70px rgba(17, 24, 39, 0.18);
+  --shardo-datepicker-radius: 8px;
+  --shardo-datepicker-font: Vazirmatn, IRANSans, Tahoma, Arial, sans-serif;
+}
+
+.shardo-datepicker-theme-bootstrap5 {
+  --shardo-datepicker-bg: var(--bs-body-bg);
+  --shardo-datepicker-fg: var(--bs-body-color);
+  --shardo-datepicker-muted: var(--bs-secondary-color);
+  --shardo-datepicker-muted-soft: var(--bs-tertiary-color);
+  --shardo-datepicker-border: var(--bs-border-color);
+  --shardo-datepicker-border-strong: var(--bs-border-color-translucent);
+  --shardo-datepicker-soft: var(--bs-secondary-bg);
+  --shardo-datepicker-soft-strong: var(--bs-tertiary-bg);
+  --shardo-datepicker-control-bg: var(--bs-body-bg);
+  --shardo-datepicker-input-bg: var(--bs-body-bg);
+  --shardo-datepicker-control-hover-bg: var(--bs-tertiary-bg);
+  --shardo-datepicker-primary: var(--bs-primary);
+  --shardo-datepicker-primary-dark: var(--bs-primary-text-emphasis);
+  --shardo-datepicker-primary-soft: var(--bs-primary-bg-subtle);
+  --shardo-datepicker-primary-range: var(--bs-primary-bg-subtle);
+  --shardo-datepicker-primary-range-border: var(--bs-primary-border-subtle);
+  --shardo-datepicker-primary-preview: var(--bs-tertiary-bg);
+  --shardo-datepicker-primary-preview-border: var(--bs-primary-border-subtle);
+  --shardo-datepicker-primary-preview-end: var(--bs-primary-bg-subtle);
+  --shardo-datepicker-primary-fg: var(--bs-white);
+  --shardo-datepicker-danger: var(--bs-danger);
+  --shardo-datepicker-danger-soft: var(--bs-danger-bg-subtle);
+  --shardo-datepicker-danger-border: var(--bs-danger-border-subtle);
+  --shardo-datepicker-focus-shadow: rgba(var(--bs-primary-rgb), 0.25);
+  --shardo-datepicker-shadow: var(--bs-box-shadow-lg);
+  --shardo-datepicker-radius: var(--bs-border-radius);
+  --shardo-datepicker-font: var(--bs-body-font-family);
+}
+
+.shardo-datepicker-theme-dark,
+:where([data-bs-theme="dark"], [data-theme="dark"], .dark, .theme-dark, .is-dark) .shardo-datepicker-theme-auto {
+  color-scheme: dark;
+  --shardo-datepicker-bg: #15181f;
+  --shardo-datepicker-fg: #f1f5f9;
+  --shardo-datepicker-muted: #aab4c2;
+  --shardo-datepicker-muted-soft: #748094;
+  --shardo-datepicker-border: #303744;
+  --shardo-datepicker-border-strong: #465266;
+  --shardo-datepicker-soft: #1f2530;
+  --shardo-datepicker-soft-strong: #2a3240;
+  --shardo-datepicker-control-bg: #1b2029;
+  --shardo-datepicker-input-bg: linear-gradient(180deg, #1d2430, #181d26);
+  --shardo-datepicker-control-hover-bg: #242b37;
+  --shardo-datepicker-primary-soft: rgba(45, 212, 191, 0.16);
+  --shardo-datepicker-primary-range: rgba(45, 212, 191, 0.14);
+  --shardo-datepicker-primary-range-border: rgba(45, 212, 191, 0.24);
+  --shardo-datepicker-primary-preview: rgba(45, 212, 191, 0.1);
+  --shardo-datepicker-primary-preview-border: rgba(45, 212, 191, 0.18);
+  --shardo-datepicker-primary-preview-end: rgba(45, 212, 191, 0.2);
+  --shardo-datepicker-danger-soft: rgba(220, 53, 69, 0.12);
+  --shardo-datepicker-danger-border: rgba(220, 53, 69, 0.28);
+  --shardo-datepicker-shadow: 0 24px 70px rgba(0, 0, 0, 0.48);
+}
+
+:where([data-bs-theme="dark"], [data-theme="dark"], .dark, .theme-dark, .is-dark) .shardo-datepicker-theme-auto.shardo-datepicker-theme-bootstrap5,
+.shardo-datepicker-theme-dark.shardo-datepicker-theme-bootstrap5 {
+  --shardo-datepicker-bg: var(--bs-body-bg);
+  --shardo-datepicker-fg: var(--bs-body-color);
+  --shardo-datepicker-muted: var(--bs-secondary-color);
+  --shardo-datepicker-muted-soft: var(--bs-tertiary-color);
+  --shardo-datepicker-border: var(--bs-border-color);
+  --shardo-datepicker-border-strong: var(--bs-border-color-translucent);
+  --shardo-datepicker-soft: var(--bs-secondary-bg);
+  --shardo-datepicker-soft-strong: var(--bs-tertiary-bg);
+  --shardo-datepicker-control-bg: var(--bs-body-bg);
+  --shardo-datepicker-input-bg: var(--bs-body-bg);
+  --shardo-datepicker-control-hover-bg: var(--bs-tertiary-bg);
+  --shardo-datepicker-primary: var(--bs-primary);
+  --shardo-datepicker-primary-dark: var(--bs-primary-text-emphasis);
+  --shardo-datepicker-primary-soft: var(--bs-primary-bg-subtle);
+  --shardo-datepicker-primary-range: var(--bs-primary-bg-subtle);
+  --shardo-datepicker-primary-range-border: var(--bs-primary-border-subtle);
+  --shardo-datepicker-primary-preview: var(--bs-tertiary-bg);
+  --shardo-datepicker-primary-preview-border: var(--bs-primary-border-subtle);
+  --shardo-datepicker-primary-preview-end: var(--bs-primary-bg-subtle);
+  --shardo-datepicker-primary-fg: var(--bs-white);
+  --shardo-datepicker-danger: var(--bs-danger);
+  --shardo-datepicker-danger-soft: var(--bs-danger-bg-subtle);
+  --shardo-datepicker-danger-border: var(--bs-danger-border-subtle);
+  --shardo-datepicker-focus-shadow: rgba(var(--bs-primary-rgb), 0.25);
+  --shardo-datepicker-shadow: var(--bs-box-shadow-lg);
+}
+
+@media (prefers-color-scheme: dark) {
+  .shardo-datepicker-theme-auto {
+    --shardo-datepicker-bg: #15181f;
+    --shardo-datepicker-fg: #f1f5f9;
+    --shardo-datepicker-muted: #aab4c2;
+    --shardo-datepicker-muted-soft: #748094;
+    --shardo-datepicker-border: #303744;
+    --shardo-datepicker-border-strong: #465266;
+    --shardo-datepicker-soft: #1f2530;
+    --shardo-datepicker-soft-strong: #2a3240;
+    --shardo-datepicker-control-bg: #1b2029;
+    --shardo-datepicker-input-bg: linear-gradient(180deg, #1d2430, #181d26);
+    --shardo-datepicker-control-hover-bg: #242b37;
+    --shardo-datepicker-primary-soft: rgba(45, 212, 191, 0.16);
+    --shardo-datepicker-primary-range: rgba(45, 212, 191, 0.14);
+    --shardo-datepicker-primary-range-border: rgba(45, 212, 191, 0.24);
+    --shardo-datepicker-primary-preview: rgba(45, 212, 191, 0.1);
+    --shardo-datepicker-primary-preview-border: rgba(45, 212, 191, 0.18);
+    --shardo-datepicker-primary-preview-end: rgba(45, 212, 191, 0.2);
+    --shardo-datepicker-danger-soft: rgba(220, 53, 69, 0.12);
+    --shardo-datepicker-danger-border: rgba(220, 53, 69, 0.28);
+    --shardo-datepicker-shadow: 0 24px 70px rgba(0, 0, 0, 0.48);
+  }
+
+  .shardo-datepicker-theme-auto.shardo-datepicker-theme-bootstrap5 {
+    --shardo-datepicker-bg: var(--bs-body-bg);
+    --shardo-datepicker-fg: var(--bs-body-color);
+    --shardo-datepicker-muted: var(--bs-secondary-color);
+    --shardo-datepicker-muted-soft: var(--bs-tertiary-color);
+    --shardo-datepicker-border: var(--bs-border-color);
+    --shardo-datepicker-border-strong: var(--bs-border-color-translucent);
+    --shardo-datepicker-soft: var(--bs-secondary-bg);
+    --shardo-datepicker-soft-strong: var(--bs-tertiary-bg);
+    --shardo-datepicker-control-bg: var(--bs-body-bg);
+    --shardo-datepicker-input-bg: var(--bs-body-bg);
+    --shardo-datepicker-control-hover-bg: var(--bs-tertiary-bg);
+    --shardo-datepicker-primary: var(--bs-primary);
+    --shardo-datepicker-primary-dark: var(--bs-primary-text-emphasis);
+    --shardo-datepicker-primary-soft: var(--bs-primary-bg-subtle);
+    --shardo-datepicker-primary-range: var(--bs-primary-bg-subtle);
+    --shardo-datepicker-primary-range-border: var(--bs-primary-border-subtle);
+    --shardo-datepicker-primary-preview: var(--bs-tertiary-bg);
+    --shardo-datepicker-primary-preview-border: var(--bs-primary-border-subtle);
+    --shardo-datepicker-primary-preview-end: var(--bs-primary-bg-subtle);
+    --shardo-datepicker-primary-fg: var(--bs-white);
+    --shardo-datepicker-danger: var(--bs-danger);
+    --shardo-datepicker-danger-soft: var(--bs-danger-bg-subtle);
+    --shardo-datepicker-danger-border: var(--bs-danger-border-subtle);
+    --shardo-datepicker-focus-shadow: rgba(var(--bs-primary-rgb), 0.25);
+    --shardo-datepicker-shadow: var(--bs-box-shadow-lg);
+  }
+}
+
+.shardo-datepicker-theme-dark-resolved,
+.shardo-datepicker-theme-dark-resolved.shardo-datepicker-theme-bootstrap5 {
+  color-scheme: dark;
+  --shardo-datepicker-bg: #15181f;
+  --shardo-datepicker-fg: #f1f5f9;
+  --shardo-datepicker-muted: #aab4c2;
+  --shardo-datepicker-muted-soft: #748094;
+  --shardo-datepicker-border: #303744;
+  --shardo-datepicker-border-strong: #465266;
+  --shardo-datepicker-soft: #1f2530;
+  --shardo-datepicker-soft-strong: #2a3240;
+  --shardo-datepicker-control-bg: #1b2029;
+  --shardo-datepicker-input-bg: linear-gradient(180deg, #1d2430, #181d26);
+  --shardo-datepicker-control-hover-bg: #242b37;
+  --shardo-datepicker-primary-soft: rgba(45, 212, 191, 0.16);
+  --shardo-datepicker-primary-range: rgba(45, 212, 191, 0.14);
+  --shardo-datepicker-primary-range-border: rgba(45, 212, 191, 0.24);
+  --shardo-datepicker-primary-preview: rgba(45, 212, 191, 0.1);
+  --shardo-datepicker-primary-preview-border: rgba(45, 212, 191, 0.18);
+  --shardo-datepicker-primary-preview-end: rgba(45, 212, 191, 0.2);
+  --shardo-datepicker-danger-soft: rgba(220, 53, 69, 0.12);
+  --shardo-datepicker-danger-border: rgba(220, 53, 69, 0.28);
+  --shardo-datepicker-shadow: 0 24px 70px rgba(0, 0, 0, 0.48);
+}
+
+.shardo-datepicker-input {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--shardo-datepicker-border);
+  border-radius: var(--shardo-datepicker-radius);
+  padding: 9px 12px;
+  color: var(--shardo-datepicker-fg);
+  background: var(--shardo-datepicker-input-bg);
+  font-family: var(--shardo-datepicker-font);
+  font-size: 14px;
+  line-height: 1.6;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.shardo-datepicker-input:hover {
+  border-color: var(--shardo-datepicker-border-strong);
+}
+
+.shardo-datepicker-input:focus {
+  border-color: var(--shardo-datepicker-primary);
+  box-shadow: 0 0 0 3px var(--shardo-datepicker-focus-shadow);
+}
+
+.shardo-datepicker-panel {
+  position: absolute;
+  z-index: 9999;
+  box-sizing: border-box;
+  width: clamp(286px, calc(100vw - 24px), 352px);
+  padding: 12px;
+  color: var(--shardo-datepicker-fg);
+  background: var(--shardo-datepicker-bg);
+  border: 1px solid var(--shardo-datepicker-border);
+  border-radius: var(--shardo-datepicker-radius);
+  box-shadow: var(--shardo-datepicker-shadow);
+  direction: rtl;
+  font-family: var(--shardo-datepicker-font);
+  user-select: none;
+}
+
+.shardo-datepicker-panel[hidden],
+.shardo-datepicker-selected-text[hidden],
+.shardo-datepicker-button[hidden] {
+  display: none !important;
+}
+
+.shardo-datepicker-inline {
+  position: static;
+  width: 100%;
+  max-width: 352px;
+  box-shadow: none;
+}
+
+.shardo-datepicker-header {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.shardo-datepicker-view-button {
+  box-sizing: border-box;
+  height: 36px;
+  min-width: 0;
+  border: 1px solid var(--shardo-datepicker-border);
+  border-radius: var(--shardo-datepicker-radius);
+  color: var(--shardo-datepicker-fg);
+  background: var(--shardo-datepicker-control-bg);
+  font-family: var(--shardo-datepicker-font);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+}
+
+.shardo-datepicker-view-button:hover,
+.shardo-datepicker-view-button[aria-expanded="true"] {
+  border-color: var(--shardo-datepicker-primary);
+  background: var(--shardo-datepicker-primary-soft);
+}
+
+.shardo-datepicker-switcher {
+  display: grid;
+  gap: 10px;
+  max-height: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: max-height 180ms ease, opacity 160ms ease, transform 160ms ease, margin-bottom 160ms ease;
+}
+
+.shardo-datepicker-switcher.shardo-datepicker-is-open {
+  max-height: 260px;
+  margin-bottom: 12px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.shardo-datepicker-switcher-tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 3px;
+  border-radius: var(--shardo-datepicker-radius);
+  background: var(--shardo-datepicker-soft);
+}
+
+.shardo-datepicker-switcher-tab {
+  height: 31px;
+  border: 0;
+  border-radius: 6px;
+  color: var(--shardo-datepicker-muted);
+  background: transparent;
+  font-family: var(--shardo-datepicker-font);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 140ms ease, color 140ms ease, box-shadow 140ms ease;
+}
+
+.shardo-datepicker-switcher-tab.shardo-datepicker-is-active {
+  color: var(--shardo-datepicker-fg);
+  background: var(--shardo-datepicker-control-bg);
+  box-shadow: 0 1px 4px rgba(17, 24, 39, 0.08);
+}
+
+.shardo-datepicker-year-bar {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  gap: 8px;
+  align-items: center;
+}
+
+.shardo-datepicker-year-text {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  border-radius: var(--shardo-datepicker-radius);
+  background: var(--shardo-datepicker-soft);
+  color: var(--shardo-datepicker-fg);
+  font-size: 14px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.shardo-datepicker-month-grid,
+.shardo-datepicker-year-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.shardo-datepicker-month-grid[hidden],
+.shardo-datepicker-year-grid[hidden] {
+  display: none;
+}
+
+.shardo-datepicker-month-button,
+.shardo-datepicker-year-button {
+  box-sizing: border-box;
+  height: 34px;
+  border: 1px solid var(--shardo-datepicker-border);
+  border-radius: var(--shardo-datepicker-radius);
+  color: var(--shardo-datepicker-fg);
+  background: var(--shardo-datepicker-control-bg);
+  font-family: var(--shardo-datepicker-font);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.shardo-datepicker-month-button:hover,
+.shardo-datepicker-year-button:hover {
+  border-color: var(--shardo-datepicker-primary);
+  background: var(--shardo-datepicker-primary-soft);
+  transform: translateY(-1px);
+}
+
+.shardo-datepicker-month-button.shardo-datepicker-is-active,
+.shardo-datepicker-year-button.shardo-datepicker-is-active {
+  color: var(--shardo-datepicker-primary-fg);
+  border-color: var(--shardo-datepicker-primary);
+  background: var(--shardo-datepicker-primary);
+}
+
+.shardo-datepicker-select,
+.shardo-datepicker-time-input {
+  box-sizing: border-box;
+  height: 38px;
+  width: 100%;
+  border: 1px solid var(--shardo-datepicker-border);
+  border-radius: var(--shardo-datepicker-radius);
+  padding: 0 10px;
+  color: var(--shardo-datepicker-fg);
+  background: var(--shardo-datepicker-control-bg);
+  font-family: var(--shardo-datepicker-font);
+  font-size: 13px;
+  outline: none;
+}
+
+.shardo-datepicker-time-input {
+  direction: ltr;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.shardo-datepicker-button {
+  box-sizing: border-box;
+  height: 36px;
+  min-width: 0;
+  border: 1px solid var(--shardo-datepicker-border);
+  border-radius: var(--shardo-datepicker-radius);
+  color: var(--shardo-datepicker-fg);
+  background: var(--shardo-datepicker-control-bg);
+  font-family: var(--shardo-datepicker-font);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+.shardo-datepicker-button.shardo-datepicker-is-icon {
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.shardo-datepicker-button:hover,
+.shardo-datepicker-select:hover,
+.shardo-datepicker-time-input:hover {
+  border-color: var(--shardo-datepicker-border-strong);
+  background: var(--shardo-datepicker-control-hover-bg);
+}
+
+.shardo-datepicker-button:hover {
+  transform: translateY(-1px);
+}
+
+.shardo-datepicker-button:focus-visible,
+.shardo-datepicker-select:focus-visible,
+.shardo-datepicker-time-input:focus-visible,
+.shardo-datepicker-day:focus-visible {
+  border-color: var(--shardo-datepicker-primary);
+  box-shadow: 0 0 0 3px var(--shardo-datepicker-focus-shadow);
+  outline: none;
+}
+
+.shardo-datepicker-weekdays,
+.shardo-datepicker-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.shardo-datepicker-weekday {
+  display: grid;
+  place-items: center;
+  height: 30px;
+  color: var(--shardo-datepicker-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.shardo-datepicker-day {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  min-width: 0;
+  border: 1px solid transparent;
+  border-radius: var(--shardo-datepicker-radius);
+  color: var(--shardo-datepicker-fg);
+  background: transparent;
+  font-family: var(--shardo-datepicker-font);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.shardo-datepicker-day:hover {
+  background: var(--shardo-datepicker-soft);
+  border-color: var(--shardo-datepicker-soft-strong);
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-outside {
+  color: var(--shardo-datepicker-muted-soft);
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-today {
+  color: var(--shardo-datepicker-primary);
+  background: var(--shardo-datepicker-primary-soft);
+  border-color: var(--shardo-datepicker-primary-range-border);
+  font-weight: 700;
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-in-range {
+  color: var(--shardo-datepicker-primary-dark);
+  background: var(--shardo-datepicker-primary-range);
+  border-color: var(--shardo-datepicker-primary-range-border);
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-preview {
+  color: var(--shardo-datepicker-primary-dark);
+  background: var(--shardo-datepicker-primary-preview);
+  border-color: var(--shardo-datepicker-primary-preview-border);
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-range-preview-end {
+  color: var(--shardo-datepicker-primary);
+  border-color: var(--shardo-datepicker-primary);
+  background: var(--shardo-datepicker-primary-preview-end);
+  font-weight: 700;
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-selected {
+  color: var(--shardo-datepicker-primary-fg);
+  background: var(--shardo-datepicker-primary);
+  border-color: var(--shardo-datepicker-primary);
+  font-weight: 700;
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-disabled {
+  color: #c4cad3;
+  background: transparent;
+  border-color: transparent;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.shardo-datepicker-day.shardo-datepicker-is-holiday:not(.shardo-datepicker-is-selected):not(.shardo-datepicker-is-disabled) {
+  color: var(--shardo-datepicker-danger);
+  background: var(--shardo-datepicker-danger-soft);
+  border-color: var(--shardo-datepicker-danger-border);
+}
+
+.shardo-datepicker-selected-text {
+  margin-top: 10px;
+  padding: 9px 10px;
+  border-radius: var(--shardo-datepicker-radius);
+  color: var(--shardo-datepicker-primary-dark);
+  background: var(--shardo-datepicker-primary-soft);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.7;
+  text-align: center;
+}
+
+.shardo-datepicker-time {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 0 4px;
+}
+
+.shardo-datepicker-time-separator {
+  color: var(--shardo-datepicker-muted);
+  font-weight: 700;
+}
+
+.shardo-datepicker-footer {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--shardo-datepicker-soft-strong);
+}
+
+.shardo-datepicker-button.shardo-datepicker-is-primary {
+  color: var(--shardo-datepicker-primary-fg);
+  border-color: var(--shardo-datepicker-primary);
+  background: var(--shardo-datepicker-primary);
+}
+
+.shardo-datepicker-button.shardo-datepicker-is-primary:hover {
+  border-color: var(--shardo-datepicker-primary-dark);
+  background: var(--shardo-datepicker-primary-dark);
+}
+
+.shardo-datepicker-button.shardo-datepicker-is-danger {
+  color: var(--shardo-datepicker-danger);
+}
+
+@media (max-width: 420px) {
+  .shardo-datepicker-panel {
+    right: 10px;
+    left: 10px;
+    width: auto;
+    max-width: 320px;
+    padding: 10px;
+    margin-inline: auto;
+  }
+
+  .shardo-datepicker-header,
+  .shardo-datepicker-year-bar {
+    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    gap: 6px;
+  }
+
+  .shardo-datepicker-view-button,
+  .shardo-datepicker-button,
+  .shardo-datepicker-year-text {
+    height: 34px;
+  }
+
+  .shardo-datepicker-switcher.shardo-datepicker-is-open {
+    max-height: 250px;
+  }
+
+  .shardo-datepicker-month-grid,
+  .shardo-datepicker-year-grid {
+    gap: 5px;
+  }
+
+  .shardo-datepicker-month-button,
+  .shardo-datepicker-year-button {
+    height: 31px;
+    font-size: 11px;
+  }
+
+  .shardo-datepicker-weekdays,
+  .shardo-datepicker-days {
+    gap: 3px;
+  }
+
+  .shardo-datepicker-weekday {
+    height: 24px;
+  }
+
+  .shardo-datepicker-day {
+    height: 31px;
+    font-size: 12px;
+  }
+
+  .shardo-datepicker-time {
+    padding-top: 9px;
+  }
+
+  .shardo-datepicker-footer {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 9px;
+    padding-top: 9px;
+  }
+}
