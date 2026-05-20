@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="fa" dir="rtl">
   <head>
     <meta charset="utf-8">
@@ -11,225 +11,659 @@
         box-sizing: border-box;
       }
 
+      :root {
+        --demo-bg: #eef2f7;
+        --demo-surface: #ffffff;
+        --demo-surface-soft: #f8fafc;
+        --demo-text: #172033;
+        --demo-muted: #667085;
+        --demo-border: #d9e0ea;
+        --demo-accent: #0f766e;
+        --demo-accent-soft: #d9f4ef;
+        --demo-blue: #2563eb;
+        --demo-amber: #b45309;
+        --demo-shadow: 0 18px 44px rgba(21, 32, 54, 0.08);
+      }
+
+      [data-bs-theme="dark"] {
+        --demo-bg: #141821;
+        --demo-surface: #1d2330;
+        --demo-surface-soft: #252d3b;
+        --demo-text: #f2f5f9;
+        --demo-muted: #a6b0bf;
+        --demo-border: #394353;
+        --demo-accent: #2dd4bf;
+        --demo-accent-soft: rgba(45, 212, 191, 0.12);
+        --demo-blue: #60a5fa;
+        --demo-amber: #fbbf24;
+        --demo-shadow: 0 20px 54px rgba(0, 0, 0, 0.28);
+      }
+
       body {
         margin: 0;
-        color: var(--bs-body-color);
-        background: var(--bs-secondary-bg);
+        color: var(--demo-text);
+        background: var(--demo-bg);
         font-family: Tahoma, Arial, sans-serif;
+      }
+
+      button,
+      input {
+        font-family: inherit;
       }
 
       main {
-        width: min(1120px, calc(100vw - 32px));
-        margin: 40px auto;
+        width: min(1220px, calc(100vw - 32px));
+        margin: 28px auto 42px;
       }
 
-      .hero {
+      .demo-shell {
         display: grid;
-        gap: 8px;
-        margin-bottom: 24px;
+        gap: 18px;
+      }
+
+      .demo-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 18px;
+        border: 1px solid var(--demo-border);
+        border-radius: 8px;
+        background: var(--demo-surface);
+        box-shadow: var(--demo-shadow);
+      }
+
+      .demo-brand {
+        display: grid;
+        gap: 6px;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
       }
 
       h1 {
-        margin: 0;
-        font-size: clamp(24px, 4vw, 36px);
-        line-height: 1.45;
+        font-size: clamp(22px, 3vw, 32px);
+        line-height: 1.55;
       }
 
-      p {
-        margin: 0;
-        max-width: 760px;
-        color: var(--bs-secondary-color);
+      .demo-lead {
+        color: var(--demo-muted);
         line-height: 1.9;
       }
 
-      .demo-grid {
-        display: grid;
-        grid-template-columns: minmax(300px, 460px) minmax(280px, 1fr);
-        gap: 24px;
-        align-items: start;
-      }
-
-      .demo-panel {
-        display: grid;
-        gap: 18px;
-        padding: 24px;
-        border: 1px solid var(--bs-border-color);
-        border-radius: 8px;
-        background: var(--bs-body-bg);
-        box-shadow: 0 18px 48px rgba(17, 24, 39, 0.08);
-      }
-
-      .demo-actions {
+      .demo-toolbar {
         display: flex;
-        justify-content: flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
-      .demo-toggle {
+      .demo-button {
         min-height: 38px;
-        border: 1px solid var(--bs-border-color);
+        border: 1px solid var(--demo-border);
         border-radius: 8px;
         padding: 0 14px;
-        color: var(--bs-body-color);
-        background: var(--bs-body-bg);
-        font-family: Tahoma, Arial, sans-serif;
+        color: var(--demo-text);
+        background: var(--demo-surface-soft);
         font-weight: 700;
         cursor: pointer;
       }
 
-      .field {
+      .demo-button:hover {
+        border-color: var(--demo-accent);
+        color: var(--demo-accent);
+      }
+
+      .demo-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 360px;
+        gap: 18px;
+        align-items: start;
+      }
+
+      .demo-section {
+        display: grid;
+        gap: 14px;
+      }
+
+      .demo-section-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 4px 2px;
+      }
+
+      .demo-section-title {
+        font-size: 18px;
+        line-height: 1.8;
+      }
+
+      .demo-section-note {
+        color: var(--demo-muted);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      .demo-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .demo-card {
+        display: grid;
+        gap: 14px;
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid var(--demo-border);
+        border-radius: 8px;
+        background: var(--demo-surface);
+        box-shadow: var(--demo-shadow);
+      }
+
+      .demo-card-head {
+        display: grid;
+        gap: 6px;
+      }
+
+      .demo-card-title {
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      .demo-card-help {
+        color: var(--demo-muted);
+        font-size: 12px;
+        line-height: 1.9;
+      }
+
+      .demo-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+
+      .demo-tag {
+        display: inline-flex;
+        align-items: center;
+        min-height: 24px;
+        padding: 0 8px;
+        border: 1px solid var(--demo-border);
+        border-radius: 999px;
+        color: var(--demo-muted);
+        background: var(--demo-surface-soft);
+        font-size: 11px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .demo-field {
         display: grid;
         gap: 8px;
       }
 
       label {
+        color: var(--demo-text);
         font-size: 13px;
         font-weight: 700;
       }
 
-      output,
+      .demo-output {
+        display: grid;
+        gap: 8px;
+        padding: 12px;
+        border: 1px solid var(--demo-border);
+        border-radius: 8px;
+        background: var(--demo-surface-soft);
+      }
+
+      .demo-output-row {
+        display: grid;
+        grid-template-columns: 96px minmax(0, 1fr);
+        gap: 8px;
+        align-items: start;
+        color: var(--demo-muted);
+        font-size: 12px;
+        line-height: 1.8;
+      }
+
+      .demo-output-row strong {
+        color: var(--demo-text);
+        font-weight: 700;
+      }
+
+      code,
+      .demo-code {
+        direction: ltr;
+        unicode-bidi: plaintext;
+        font-family: Consolas, Menlo, monospace;
+      }
+
+      .demo-output-value {
+        color: var(--demo-blue);
+        overflow-wrap: anywhere;
+      }
+
+      .demo-sidebar {
+        position: sticky;
+        top: 18px;
+        display: grid;
+        gap: 14px;
+      }
+
+      .demo-state,
+      .demo-guide,
+      .demo-inline-panel {
+        display: grid;
+        gap: 12px;
+        padding: 16px;
+        border: 1px solid var(--demo-border);
+        border-radius: 8px;
+        background: var(--demo-surface);
+        box-shadow: var(--demo-shadow);
+      }
+
+      .demo-state h2,
+      .demo-guide h2,
+      .demo-inline-panel h2 {
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      .demo-guide-list {
+        display: grid;
+        gap: 9px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .demo-guide-list li {
+        position: relative;
+        padding-inline-start: 18px;
+        color: var(--demo-muted);
+        font-size: 12px;
+        line-height: 1.9;
+      }
+
+      .demo-guide-list li::before {
+        content: "";
+        position: absolute;
+        inset-inline-start: 0;
+        top: 10px;
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: var(--demo-accent);
+      }
+
       pre {
-        display: block;
-        min-height: 42px;
+        min-height: 168px;
+        max-height: 360px;
         margin: 0;
         padding: 12px;
-        border: 1px solid var(--bs-border-color);
+        border: 1px solid var(--demo-border);
         border-radius: 8px;
-        background: var(--bs-tertiary-bg);
-        color: var(--bs-body-color);
+        background: #0d1320;
+        color: #d7e1ef;
         direction: ltr;
-        font-family: Consolas, Tahoma, monospace;
-        font-size: 13px;
+        font-size: 12px;
         line-height: 1.8;
         overflow: auto;
         white-space: pre-wrap;
       }
 
-      .inline-host {
+      [data-bs-theme="dark"] pre {
+        background: #090d14;
+      }
+
+      .demo-inline-host {
         display: grid;
-        justify-items: start;
+        justify-items: stretch;
       }
 
-      .section-title {
-        margin: 0;
-        font-size: 16px;
-        line-height: 1.8;
+      .demo-wide {
+        grid-column: 1 / -1;
       }
 
-      @media (max-width: 820px) {
+      .demo-popover-zone {
+        min-height: 290px;
+        display: grid;
+        align-content: end;
+      }
+
+      @media (max-width: 1040px) {
+        .demo-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .demo-sidebar {
+          position: static;
+        }
+      }
+
+      @media (max-width: 760px) {
         main {
           width: min(100vw - 20px, 560px);
-          margin: 18px auto;
+          margin: 14px auto 24px;
+        }
+
+        .demo-topbar,
+        .demo-section-header {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .demo-toolbar {
+          width: 100%;
+        }
+
+        .demo-button {
+          flex: 1 1 140px;
         }
 
         .demo-grid {
           grid-template-columns: 1fr;
-          gap: 16px;
         }
 
-        .demo-panel {
-          gap: 14px;
-          padding: 14px;
+        .demo-card,
+        .demo-state,
+        .demo-guide,
+        .demo-inline-panel,
+        .demo-topbar {
+          padding: 13px;
         }
       }
     </style>
   </head>
   <body>
-    <main>
-      <section class="hero">
-        <h1>Shardo Date Picker</h1>
-        <p>تنظیمات کنترل از طریق attributeهای HTML خوانده می‌شود و مقدار میلادی به صورت hidden input برای ارسال به سرور ساخته می‌شود.</p>
-        <div class="demo-actions">
-          <button class="demo-toggle" id="themeToggle" type="button">تغییر تم</button>
+    <main class="demo-shell">
+      <section class="demo-topbar">
+        <div class="demo-brand">
+          <h1>Shardo Date Picker</h1>
+          <p class="demo-lead">نمونه‌های کاربردی برای تاریخ شمسی، خروجی میلادی hidden، رنج، زمان، تم Bootstrap، حالت inline و تنظیمات سراسری.</p>
+        </div>
+        <div class="demo-toolbar">
+          <button class="demo-button" id="themeToggle" type="button">تغییر تم روشن/تاریک</button>
+          <button class="demo-button" id="applyGlobalDefaults" type="button">اعمال تنظیمات سراسری</button>
         </div>
       </section>
 
-      <section class="demo-grid">
-        <div class="demo-panel">
-          <h2 class="section-title">نمونه‌های attribute-based</h2>
-
-          <div class="field">
-            <label for="appointment">تاریخ و زمان</label>
-            <input id="appointment" name="appointment_display" type="text" placeholder="1405/02/29 14:30" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd HH:mm" data-shardo-datepicker-gregorian-format="yyyy-MM-dd HH:mm" data-shardo-datepicker-hidden-input-name="appointment" data-shardo-datepicker-hidden-input-id="appointment_gregorian" data-shardo-datepicker-show-time="true" data-shardo-datepicker-time-step="5" data-shardo-datepicker-auto-close="false" data-shardo-datepicker-min="1404/01/01" data-shardo-datepicker-max="1410/12/29" data-shardo-datepicker-disabled-dates="1405/01/13" data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-holidays="1405/02/15,1405/03/14" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy">
+      <section class="demo-layout">
+        <div class="demo-section">
+          <div class="demo-section-header">
+            <div>
+              <h2 class="demo-section-title">نمونه تنظیمات با Attribute</h2>
+              <p class="demo-section-note">روی هر فیلد کلیک کنید؛ خروجی شمسی برای کاربر و خروجی میلادی برای سرور در پنل سمت چپ نمایش داده می‌شود.</p>
+            </div>
           </div>
 
-          <div class="field">
-            <label for="vacation">رنج تاریخ</label>
-            <input id="vacation" name="vacation_display" type="text" placeholder="1405/03/01 - 1405/03/10" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-range="true" data-shardo-datepicker-range-separator=" - " data-shardo-datepicker-gregorian-range-separator=" - " data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="vacation_range" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-holidays="1405/02/20" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM">
-          </div>
+          <div class="demo-grid">
+            <article class="demo-card">
+              <div class="demo-card-head">
+                <h3 class="demo-card-title">تاریخ ساده با بستن خودکار</h3>
+                <p class="demo-card-help">برای فیلدهای معمولی فرم؛ بعد از انتخاب روز بسته می‌شود و مقدار میلادی در hidden input می‌نشیند.</p>
+                <div class="demo-tags">
+                  <span class="demo-tag">showTime=false</span>
+                  <span class="demo-tag">autoClose=true</span>
+                  <span class="demo-tag">hiddenInput</span>
+                </div>
+              </div>
+              <div class="demo-field">
+                <label for="basicDate">تاریخ تحویل</label>
+                <input id="basicDate" name="basic_date_display" type="text" placeholder="1405/02/13" autocomplete="off" data-demo-watch="تاریخ تحویل" data-demo-hidden="basic_date" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="basic_date" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy">
+              </div>
+              <div class="demo-output" data-demo-output-for="basicDate"></div>
+            </article>
 
-          <div class="field">
-            <label for="birthday">فقط تاریخ</label>
-            <input id="birthday" name="birthday_display" type="text" placeholder="1400/01/01" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="birthday" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-year-range="120">
-          </div>
+            <article class="demo-card">
+              <div class="demo-card-head">
+                <h3 class="demo-card-title">تاریخ و ساعت با تایید</h3>
+                <p class="demo-card-help">وقتی ساعت فعال است، انتخاب نهایی با دکمه تایید انجام می‌شود و دقیقه‌ها بر اساس step تنظیم می‌شوند.</p>
+                <div class="demo-tags">
+                  <span class="demo-tag">showTime=true</span>
+                  <span class="demo-tag">timeStep=5</span>
+                  <span class="demo-tag">selectedText</span>
+                </div>
+              </div>
+              <div class="demo-field">
+                <label for="appointment">قرار ملاقات</label>
+                <input id="appointment" name="appointment_display" type="text" placeholder="1405/02/29 14:30" autocomplete="off" data-demo-watch="قرار ملاقات" data-demo-hidden="appointment" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd HH:mm" data-shardo-datepicker-gregorian-format="yyyy-MM-dd HH:mm" data-shardo-datepicker-hidden-input-name="appointment" data-shardo-datepicker-hidden-input-id="appointment_gregorian" data-shardo-datepicker-show-time="true" data-shardo-datepicker-time-step="5" data-shardo-datepicker-auto-close="false" data-shardo-datepicker-min="1404/01/01" data-shardo-datepicker-max="1410/12/29" data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy">
+              </div>
+              <div class="demo-output" data-demo-output-for="appointment"></div>
+            </article>
 
-          <div class="field">
-            <label for="allSettings">نمونه همه تنظیمات</label>
-            <input id="allSettings" name="all_settings_display" type="text" placeholder="1405/02/01" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input="true" data-shardo-datepicker-hidden-input-name="all_settings" data-shardo-datepicker-hidden-input-id="all_settings_gregorian" data-shardo-datepicker-show-time="false" data-shardo-datepicker-time-step="10" data-shardo-datepicker-min="1404/01/01" data-shardo-datepicker-max="1412/12/29" data-shardo-datepicker-disabled-dates="1405/02/10,1405/02/11" data-shardo-datepicker-disable-past="false" data-shardo-datepicker-disable-future="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-use-persian-digits="false" data-shardo-datepicker-input-readonly="false" data-shardo-datepicker-range="false" data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-holidays="1405/02/15,1405/02/22" data-shardo-datepicker-week-start="6" data-shardo-datepicker-year-range="90" data-shardo-datepicker-theme="auto" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy">
-          </div>
+            <article class="demo-card">
+              <div class="demo-card-head">
+                <h3 class="demo-card-title">رنج تاریخ</h3>
+                <p class="demo-card-help">تاریخ شروع و پایان را انتخاب کنید؛ هنگام حرکت موس، محدوده به صورت پیش‌نمایش دیده می‌شود.</p>
+                <div class="demo-tags">
+                  <span class="demo-tag">range=true</span>
+                  <span class="demo-tag">hover preview</span>
+                  <span class="demo-tag">custom separator</span>
+                </div>
+              </div>
+              <div class="demo-field">
+                <label for="vacation">بازه مرخصی</label>
+                <input id="vacation" name="vacation_display" type="text" placeholder="1405/03/01 - 1405/03/10" autocomplete="off" data-demo-watch="بازه مرخصی" data-demo-hidden="vacation_range" data-shardo-datepicker data-shardo-datepicker-range="true" data-shardo-datepicker-range-separator=" - " data-shardo-datepicker-gregorian-range-separator=" - " data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="vacation_range" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-holidays="1405/02/20" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM">
+              </div>
+              <div class="demo-output" data-demo-output-for="vacation"></div>
+            </article>
 
-          <div class="field">
-            <label>خروجی قابل مشاهده</label>
-            <output id="result">هنوز مقداری انتخاب نشده است.</output>
-          </div>
+            <article class="demo-card">
+              <div class="demo-card-head">
+                <h3 class="demo-card-title">محدودیت، تعطیلی و مقدار اولیه</h3>
+                <p class="demo-card-help">ورودی اولیه می‌تواند شمسی یا میلادی باشد؛ جمعه‌ها و تاریخ‌های تعطیل با ظاهر جدا نمایش داده می‌شوند.</p>
+                <div class="demo-tags">
+                  <span class="demo-tag">value=gregorian</span>
+                  <span class="demo-tag">min/max</span>
+                  <span class="demo-tag">holidays</span>
+                </div>
+              </div>
+              <div class="demo-field">
+                <label for="restrictedDate">تاریخ مجاز</label>
+                <input id="restrictedDate" name="restricted_date_display" type="text" autocomplete="off" data-demo-watch="تاریخ مجاز" data-demo-hidden="restricted_date" data-shardo-datepicker data-shardo-datepicker-value="gregorian:2026-05-03" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="restricted_date" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-min="2026-03-21" data-shardo-datepicker-max="1410/12/29" data-shardo-datepicker-disabled-dates="1405/02/10,2026-05-01" data-shardo-datepicker-holidays="1405/02/15,2026-05-12" data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy">
+              </div>
+              <div class="demo-output" data-demo-output-for="restrictedDate"></div>
+            </article>
 
-          <div class="field">
-            <label>وضعیت و مقدار hidden</label>
-            <pre id="state"></pre>
+            <article class="demo-card">
+              <div class="demo-card-head">
+                <h3 class="demo-card-title">JSON Attribute</h3>
+                <p class="demo-card-help">برای تنظیمات طولانی می‌توانید بخشی از optionها را در خود data-shardo-datepicker به صورت JSON بگذارید.</p>
+                <div class="demo-tags">
+                  <span class="demo-tag">JSON config</span>
+                  <span class="demo-tag">weekStart</span>
+                  <span class="demo-tag">yearRange</span>
+                </div>
+              </div>
+              <div class="demo-field">
+                <label for="jsonPicker">تنظیم JSON</label>
+                <input id="jsonPicker" name="json_picker_display" type="text" placeholder="1405/02/13" autocomplete="off" data-demo-watch="تنظیم JSON" data-demo-hidden="json_picker" data-shardo-datepicker='{"showTime":false,"autoClose":true,"format":"yyyy/MM/dd","gregorianFormat":"yyyy-MM-dd","hiddenInputName":"json_picker","weekStart":0,"yearRange":40,"showSelectedText":true,"selectedTextFormat":"dddd d MMMM yyyy"}'>
+              </div>
+              <div class="demo-output" data-demo-output-for="jsonPicker"></div>
+            </article>
+
+            <article class="demo-card">
+              <div class="demo-card-head">
+                <h3 class="demo-card-title">جای‌گذاری داینامیک پنجره</h3>
+                <p class="demo-card-help">placement روی auto قرار دارد؛ کنترل بر اساس فضای صفحه بهترین جهت را انتخاب می‌کند.</p>
+                <div class="demo-tags">
+                  <span class="demo-tag">placement=auto</span>
+                  <span class="demo-tag">responsive sheet</span>
+                </div>
+              </div>
+              <div class="demo-popover-zone">
+                <div class="demo-field">
+                  <label for="placementPicker">نمونه نزدیک پایین صفحه</label>
+                  <input id="placementPicker" name="placement_picker_display" type="text" placeholder="1405/02/20" autocomplete="off" data-demo-watch="جای‌گذاری داینامیک" data-demo-hidden="placement_picker" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="placement_picker" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-placement="auto">
+                </div>
+              </div>
+              <div class="demo-output" data-demo-output-for="placementPicker"></div>
+            </article>
+
+            <article class="demo-card demo-wide">
+              <div class="demo-card-head">
+                <h3 class="demo-card-title">همه تنظیمات رایج در یک فیلد</h3>
+                <p class="demo-card-help">این نمونه ترکیبی از مقدار اولیه، hidden input، تم Bootstrap، محدودیت تاریخ، تعطیلی، فرمت انتخاب و بستن خودکار است.</p>
+                <div class="demo-tags">
+                  <span class="demo-tag">bootstrapTheme</span>
+                  <span class="demo-tag">theme=auto</span>
+                  <span class="demo-tag">hiddenInputId</span>
+                  <span class="demo-tag">disabledDates</span>
+                  <span class="demo-tag">inputReadonly=false</span>
+                </div>
+              </div>
+              <div class="demo-field">
+                <label for="allSettings">نمونه کامل</label>
+                <input id="allSettings" name="all_settings_display" type="text" placeholder="1405/02/01" autocomplete="off" data-demo-watch="نمونه کامل" data-demo-hidden="all_settings" data-shardo-datepicker data-shardo-datepicker-value="1405/02/01" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input="true" data-shardo-datepicker-hidden-input-name="all_settings" data-shardo-datepicker-hidden-input-id="all_settings_gregorian" data-shardo-datepicker-show-time="false" data-shardo-datepicker-time-step="10" data-shardo-datepicker-min="1404/01/01" data-shardo-datepicker-max="1412/12/29" data-shardo-datepicker-disabled-dates="1405/02/10,1405/02/11" data-shardo-datepicker-disable-past="false" data-shardo-datepicker-disable-future="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-use-persian-digits="false" data-shardo-datepicker-input-readonly="false" data-shardo-datepicker-range="false" data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-holidays="1405/02/15,1405/02/22" data-shardo-datepicker-week-start="6" data-shardo-datepicker-year-range="90" data-shardo-datepicker-theme="auto" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy">
+              </div>
+              <div class="demo-output" data-demo-output-for="allSettings"></div>
+            </article>
           </div>
         </div>
 
-        <div class="demo-panel inline-host">
-          <h2 class="section-title">نمونه inline</h2>
-          <div id="inlinePicker" data-shardo-datepicker data-shardo-datepicker-inline="true" data-shardo-datepicker-show-time="true" data-shardo-datepicker-time-step="15" data-shardo-datepicker-format="yyyy/MM/dd HH:mm" data-shardo-datepicker-gregorian-format="yyyy-MM-dd HH:mm" data-shardo-datepicker-hidden-input="false" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy"></div>
-        </div>
+        <aside class="demo-sidebar">
+          <section class="demo-state">
+            <h2>خروجی آخرین انتخاب</h2>
+            <pre id="state">روی یکی از نمونه‌ها کلیک کنید.</pre>
+          </section>
+
+          <section class="demo-guide">
+            <h2>راهنمای سریع</h2>
+            <ul class="demo-guide-list">
+              <li>نمایش فیلد برای کاربر شمسی است، اما hidden input مقدار میلادی را برای سرور نگه می‌دارد.</li>
+              <li>برای تاریخ‌های ورودی مثل value، min، max و holidays می‌توانید شمسی یا میلادی وارد کنید.</li>
+              <li>در حالت range، بعد از انتخاب تاریخ دوم مقدار نهایی ثبت می‌شود.</li>
+              <li>در حالت time، دکمه تایید فقط وقتی لازم باشد نمایش داده می‌شود.</li>
+              <li>دکمه تنظیمات سراسری پایین، optionهای عمومی را روی همه کنترل‌های موجود اعمال می‌کند.</li>
+            </ul>
+          </section>
+
+          <section class="demo-inline-panel">
+            <h2>نمونه inline</h2>
+            <p class="demo-card-help">این حالت همیشه داخل صفحه است و دکمه‌های غیرکاربردی مثل بستن نمایش داده نمی‌شوند.</p>
+            <div id="inlinePicker" class="demo-inline-host" data-demo-watch="تقویم inline" data-shardo-datepicker data-shardo-datepicker-inline="true" data-shardo-datepicker-show-time="true" data-shardo-datepicker-auto-close="false" data-shardo-datepicker-time-step="15" data-shardo-datepicker-format="yyyy/MM/dd HH:mm" data-shardo-datepicker-gregorian-format="yyyy-MM-dd HH:mm" data-shardo-datepicker-hidden-input="false" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy"></div>
+          </section>
+        </aside>
       </section>
     </main>
 
+    <script>
+      window.shardoDemoGlobalHolidays = () => ["2026-05-24", "1405/03/14"];
+      window.ShardoDatePickerDefaults = {
+        format: "yyyy/MM/dd",
+        gregorianFormat: "yyyy-MM-dd",
+        showTime: false,
+        autoClose: true,
+        showFridayHolidays: true,
+        holidays: window.shardoDemoGlobalHolidays,
+        showSelectedText: true,
+        selectedTextFormat: "dddd d MMMM yyyy",
+        bootstrapTheme: true,
+        theme: "auto",
+        placement: "auto"
+      };
+    </script>
     <script type="module">
       import "./src/ShardoDatePicker.js";
 
-      const result = document.querySelector("#result");
       const state = document.querySelector("#state");
       const themeToggle = document.querySelector("#themeToggle");
+      const applyGlobalDefaults = document.querySelector("#applyGlobalDefaults");
+      const watched = [...document.querySelectorAll("[data-demo-watch]")];
 
-      const hiddenValue = (name) => document.querySelector(`[name="${name}"]`)?.value || "";
+      const hiddenValue = (name) => name ? document.querySelector(`[name="${name}"]`)?.value || "" : "";
 
-      const renderState = (label, detail, hiddenName) => {
-        result.textContent = `${label}: ${detail.value || "خالی"}`;
-        state.textContent = JSON.stringify({
-          value: detail.value,
-          gregorian: detail.gregorianValue,
-          selectedText: detail.selectedText,
-          hiddenName,
-          hiddenValue: hiddenValue(hiddenName),
-          date: detail.date,
-          jalali: detail.jalali
-        }, null, 2);
+      const summaryFor = (element, detail = null) => {
+        const picker = element.shardoDatePicker;
+        const value = detail?.value ?? picker?.getValue?.() ?? element.value ?? "";
+        const gregorian = detail?.gregorianValue ?? picker?.getGregorianValue?.() ?? hiddenValue(element.dataset.demoHidden);
+        const selectedText = detail?.selectedText ?? picker?.getSelectedText?.() ?? "";
+        return {
+          title: element.dataset.demoWatch,
+          value,
+          gregorian,
+          selectedText,
+          hiddenName: element.dataset.demoHidden || null,
+          hiddenValue: hiddenValue(element.dataset.demoHidden)
+        };
       };
 
-      [
-        ["#appointment", "قرار ملاقات", "appointment"],
-        ["#vacation", "رنج مرخصی", "vacation_range"],
-        ["#birthday", "تاریخ تولد", "birthday"],
-        ["#allSettings", "همه تنظیمات", "all_settings"]
-      ].forEach(([selector, label, hiddenName]) => {
-        const element = document.querySelector(selector);
-        element.addEventListener("shardo-datepicker:change", (event) => renderState(label, event.detail, hiddenName));
+      const renderOutput = (element, detail = null) => {
+        const output = document.querySelector(`[data-demo-output-for="${element.id}"]`);
+        if (!output) {
+          return;
+        }
+
+        const data = summaryFor(element, detail);
+        output.replaceChildren();
+        [
+          ["شمسی", data.value || "خالی"],
+          ["میلادی", data.gregorian || "خالی"],
+          ["hidden", data.hiddenValue || "ندارد"]
+        ].forEach(([label, value]) => {
+          const row = document.createElement("div");
+          const title = document.createElement("strong");
+          const text = document.createElement("span");
+          row.className = "demo-output-row";
+          text.className = "demo-output-value demo-code";
+          title.textContent = label;
+          text.textContent = value;
+          row.append(title, text);
+          output.appendChild(row);
+        });
+      };
+
+      const renderState = (element, detail = null) => {
+        const data = summaryFor(element, detail);
+        state.textContent = JSON.stringify(data, null, 2);
+      };
+
+      watched.forEach((element) => {
+        renderOutput(element);
+        element.addEventListener("shardo-datepicker:change", (event) => {
+          renderOutput(element, event.detail);
+          renderState(element, event.detail);
+        });
+        element.addEventListener("shardo-datepicker:clear", (event) => {
+          renderOutput(element, event.detail);
+          renderState(element, event.detail);
+        });
       });
 
-      document.querySelector("#inlinePicker").addEventListener("shardo-datepicker:change", (event) => renderState("تقویم inline", event.detail, ""));
+      renderState(document.querySelector("#allSettings"));
 
       themeToggle.addEventListener("click", () => {
         const next = document.documentElement.dataset.bsTheme === "dark" ? "light" : "dark";
         document.documentElement.dataset.bsTheme = next;
         document.body.dataset.bsTheme = next;
       });
+
+      applyGlobalDefaults.addEventListener("click", () => {
+        window.ShardoDatePicker.configure({
+          showFridayHolidays: true,
+          holidays: ["1405/02/04", "2026-06-04"],
+          selectedTextFormat: "dddd d MMMM yyyy",
+          bootstrapTheme: true,
+          theme: "auto",
+          placement: "auto"
+        }, true);
+
+        watched.forEach((element) => renderOutput(element));
+        state.textContent = JSON.stringify({
+          action: "global defaults applied",
+          holidays: ["1405/02/04", "2026-06-04"],
+          bootstrapTheme: true,
+          theme: "auto",
+          placement: "auto"
+        }, null, 2);
+      });
     </script>
   </body>
 </html>
-
-
-
-
-
-

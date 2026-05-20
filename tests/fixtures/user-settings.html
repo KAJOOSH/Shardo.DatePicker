@@ -21,6 +21,19 @@
       ShardoFixedDate.parse = ShardoNativeDate.parse;
       window.Date = ShardoFixedDate;
     </script>
+    <script>
+      window.fixtureGlobalHolidays = () => ["2026-05-04"];
+      window.ShardoDatePickerDefaults = {
+        format: "yyyy/MM/dd",
+        gregorianFormat: "yyyy-MM-dd",
+        showTime: false,
+        autoClose: true,
+        showFridayHolidays: false,
+        holidays: window.fixtureGlobalHolidays,
+        showSelectedText: true,
+        placement: "left"
+      };
+    </script>
     <style>
       :root,
       [data-bs-theme="light"] {
@@ -139,7 +152,7 @@
       <section>
         <div class="field">
           <label for="allSettings">all settings</label>
-          <input id="allSettings" name="all_settings_display" value="1405/02/01" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input="true" data-shardo-datepicker-hidden-input-name="all_settings" data-shardo-datepicker-hidden-input-id="all_settings_gregorian" data-shardo-datepicker-show-time="false" data-shardo-datepicker-time-step="10" data-shardo-datepicker-min="1405/02/01" data-shardo-datepicker-max="1405/02/29" data-shardo-datepicker-disabled-dates="1405/02/10" data-shardo-datepicker-disable-past="false" data-shardo-datepicker-disable-future="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-use-persian-digits="false" data-shardo-datepicker-input-readonly="false" data-shardo-datepicker-range="false" data-shardo-datepicker-range-separator="__" data-shardo-datepicker-gregorian-range-separator=".." data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-holidays="1405/02/15" data-shardo-datepicker-week-start="6" data-shardo-datepicker-year-range="90" data-shardo-datepicker-theme="auto" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy" data-shardo-datepicker-selected-text-range-separator="__" data-shardo-datepicker-months="Farvardin,Ordibehesht,Khordad,Tir,Mordad,Shahrivar,Mehr,Aban,Azar,Dey,Bahman,Esfand" data-shardo-datepicker-weekdays="SA,SU,MO,TU,WE,TH,FR" data-shardo-datepicker-weekday-names="Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday">
+          <input id="allSettings" name="all_settings_display" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-value="1405/02/01" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input="true" data-shardo-datepicker-hidden-input-name="all_settings" data-shardo-datepicker-hidden-input-id="all_settings_gregorian" data-shardo-datepicker-show-time="false" data-shardo-datepicker-time-step="10" data-shardo-datepicker-min="1405/02/01" data-shardo-datepicker-max="1405/02/29" data-shardo-datepicker-disabled-dates="1405/02/10" data-shardo-datepicker-disable-past="false" data-shardo-datepicker-disable-future="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-use-persian-digits="false" data-shardo-datepicker-input-readonly="false" data-shardo-datepicker-range="false" data-shardo-datepicker-range-separator="__" data-shardo-datepicker-gregorian-range-separator=".." data-shardo-datepicker-show-friday-holidays="true" data-shardo-datepicker-holidays="1405/02/15" data-shardo-datepicker-week-start="6" data-shardo-datepicker-year-range="90" data-shardo-datepicker-theme="auto" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-placement="auto" data-shardo-datepicker-show-selected-text="true" data-shardo-datepicker-selected-text-format="dddd d MMMM yyyy" data-shardo-datepicker-selected-text-range-separator="__" data-shardo-datepicker-months="Farvardin,Ordibehesht,Khordad,Tir,Mordad,Shahrivar,Mehr,Aban,Azar,Dey,Bahman,Esfand" data-shardo-datepicker-weekdays="SA,SU,MO,TU,WE,TH,FR" data-shardo-datepicker-weekday-names="Saturday,Sunday,Monday,Tuesday,Wednesday,Thursday,Friday">
         </div>
 
         <div class="field">
@@ -155,6 +168,21 @@
         <div class="field">
           <label for="manualPicker">manual picker</label>
           <input id="manualPicker" name="manual_picker_display" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="manual_picker" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-input-readonly="false">
+        </div>
+
+        <div class="field">
+          <label for="gregorianAttributePicker">gregorian attribute picker</label>
+          <input id="gregorianAttributePicker" name="gregorian_attribute_picker_display" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-value="2026-05-03" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-hidden-input-name="gregorian_attribute_picker" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-min="2026-05-01" data-shardo-datepicker-max="2026-05-05" data-shardo-datepicker-disabled-dates="2026-05-02" data-shardo-datepicker-holidays="2026-05-04">
+        </div>
+
+        <div class="field">
+          <label for="mixedRangeValuePicker">mixed range value picker</label>
+          <input id="mixedRangeValuePicker" name="mixed_range_value_picker_display" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-range="true" data-shardo-datepicker-value="2026-05-01__jalali:1405/02/15" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-range-separator="__" data-shardo-datepicker-gregorian-range-separator=".." data-shardo-datepicker-hidden-input-name="mixed_range_value_picker" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
+        </div>
+
+        <div class="field">
+          <label for="globalAttributePicker">global attribute picker</label>
+          <input id="globalAttributePicker" name="global_attribute_picker_display" value="2026-05-03" autocomplete="off" data-shardo-datepicker>
         </div>
 
         <div class="field">
@@ -188,6 +216,16 @@
         </div>
 
         <div class="field">
+          <label for="placementAutoPicker">placement auto picker</label>
+          <input id="placementAutoPicker" name="placement_auto_picker_display" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-placement="auto" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
+        </div>
+
+        <div class="field">
+          <label for="placementRightPicker">placement right picker</label>
+          <input id="placementRightPicker" name="placement_right_picker_display" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-placement="right" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
+        </div>
+
+        <div class="field">
           <label for="darkOptionPicker">dark option picker</label>
           <input id="darkOptionPicker" name="dark_option_picker_display" autocomplete="off" data-shardo-datepicker data-shardo-datepicker-theme="dark" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
         </div>
@@ -209,7 +247,7 @@
       </section>
 
       <section>
-        <div id="inlinePicker" data-testid="inlinePicker" data-shardo-datepicker data-shardo-datepicker-inline="true" data-shardo-datepicker-show-time="true" data-shardo-datepicker-time-step="15" data-shardo-datepicker-format="yyyy/MM/dd HH:mm" data-shardo-datepicker-gregorian-format="yyyy-MM-dd HH:mm" data-shardo-datepicker-hidden-input="false" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-show-selected-text="true"></div>
+        <div id="inlinePicker" data-testid="inlinePicker" data-shardo-datepicker data-shardo-datepicker-inline="true" data-shardo-datepicker-show-time="true" data-shardo-datepicker-auto-close="false" data-shardo-datepicker-time-step="15" data-shardo-datepicker-format="yyyy/MM/dd HH:mm" data-shardo-datepicker-gregorian-format="yyyy-MM-dd HH:mm" data-shardo-datepicker-hidden-input="false" data-shardo-datepicker-bootstrap-theme="true" data-shardo-datepicker-show-selected-text="true"></div>
       </section>
 
       <section id="portal"></section>

@@ -56,7 +56,7 @@
     </tr>
     <tr>
       <td>رابط کاربری</td>
-      <td>سازگار با RTL، پشتیبانی از حالت روشن و تاریک، قابل استفاده به صورت popup یا inline</td>
+      <td>سازگار با RTL، پشتیبانی از حالت روشن و تاریک، دکمه‌های SVG، جای‌گذاری داینامیک popup دسکتاپ، bottom sheet موبایل و حالت inline</td>
     </tr>
     <tr>
       <td>شخصی‌سازی</td>
@@ -115,6 +115,7 @@ import "shardo-datepicker/ShardoDatePicker.css";
   name="appointment_display"
   type="text"
   data-shardo-datepicker
+  data-shardo-datepicker-value="1405/02/28 14:30"
   data-shardo-datepicker-format="yyyy/MM/dd HH:mm"
   data-shardo-datepicker-gregorian-format="yyyy-MM-dd HH:mm"
   data-shardo-datepicker-hidden-input-name="appointment"
@@ -157,11 +158,117 @@ import "shardo-datepicker/ShardoDatePicker.css";
 
 ---
 
+<h2 id="مقدار-اولیه-با-attribute" dir="rtl">مقدار اولیه با Attribute</h2>
+
+<p dir="rtl">
+  برای مقداردهی اولیه از Attribute زیر استفاده کنید. مقدار باید شمسی باشد و بر اساس <code dir="ltr">format</code> خوانده می‌شود.
+  بعد از ساخت کنترل، input اصلی با مقدار شمسی و hidden input با مقدار میلادی متناظر پر می‌شود.
+</p>
+
+```html
+<input
+  name="start_date_display"
+  type="text"
+  data-shardo-datepicker
+  data-shardo-datepicker-value="1405/02/28"
+  data-shardo-datepicker-format="yyyy/MM/dd"
+  data-shardo-datepicker-gregorian-format="yyyy-MM-dd"
+  data-shardo-datepicker-hidden-input-name="start_date"
+  data-shardo-datepicker-show-time="false"
+>
+```
+
+<p dir="rtl">
+  در مثال بالا مقدار قابل مشاهده <code dir="ltr">1405/02/28</code> است و مقدار hidden input برابر <code dir="ltr">2026-05-18</code> خواهد شد.
+</p>
+
+---
+
+<h2 id="ورودی-تاریخ-شمسی-و-میلادی" dir="rtl">ورودی تاریخ شمسی و میلادی</h2>
+
+<p dir="rtl">
+  همه تنظیماتی که تاریخ یا لیست تاریخ دریافت می‌کنند، هم مقدار شمسی و هم مقدار میلادی را می‌پذیرند.
+  این موضوع شامل <code dir="ltr">value</code>، <code dir="ltr">min</code>، <code dir="ltr">max</code>، <code dir="ltr">disabledDates</code>، <code dir="ltr">holidays</code> و مقدارهای بازه تاریخ است.
+</p>
+
+```html
+<input
+  data-shardo-datepicker
+  data-shardo-datepicker-value="2026-05-18"
+  data-shardo-datepicker-min="1405/02/01"
+  data-shardo-datepicker-max="2026-05-30"
+  data-shardo-datepicker-disabled-dates="2026-05-20,1405/03/10"
+  data-shardo-datepicker-holidays="2026-05-24,1405/03/14"
+>
+```
+
+<div dir="rtl">
+<h3 dir="rtl">قانون تشخیص تقویم ورودی</h3>
+
+<table dir="rtl">
+  <thead>
+    <tr>
+      <th>نوع مقدار</th>
+      <th>نمونه</th>
+      <th>تقویم تشخیص‌داده‌شده</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>سال کمتر از <code dir="ltr">1700</code></td>
+      <td><code dir="ltr">1405/02/28</code></td>
+      <td>شمسی / جلالی</td>
+    </tr>
+    <tr>
+      <td>سال برابر یا بزرگ‌تر از <code dir="ltr">1700</code></td>
+      <td><code dir="ltr">2026-05-18</code></td>
+      <td>میلادی</td>
+    </tr>
+    <tr>
+      <td>ورودی صریح شمسی</td>
+      <td><code dir="ltr">jalali:1700/01/01</code></td>
+      <td>شمسی / جلالی</td>
+    </tr>
+    <tr>
+      <td>ورودی صریح میلادی</td>
+      <td><code dir="ltr">gregorian:2026/05/18</code></td>
+      <td>میلادی</td>
+    </tr>
+    <tr>
+      <td>آبجکت JavaScript شمسی</td>
+      <td><code dir="ltr">{ jy: 1405, jm: 2, jd: 28 }</code></td>
+      <td>شمسی / جلالی</td>
+    </tr>
+    <tr>
+      <td>آبجکت JavaScript میلادی</td>
+      <td><code dir="ltr">{ gy: 2026, gm: 5, gd: 18 }</code></td>
+      <td>میلادی</td>
+    </tr>
+    <tr>
+      <td>نمونه <code dir="ltr">Date</code></td>
+      <td><code dir="ltr">new Date(2026, 4, 18)</code></td>
+      <td>میلادی</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p dir="rtl">
+  برای سال‌های خیلی دور که ممکن است سال شمسی و میلادی هر دو معتبر باشند، از prefix صریح <code dir="ltr">jalali:</code> یا <code dir="ltr">gregorian:</code> استفاده کنید تا تشخیص تقویم قطعی باشد.
+</p>
+
+---
+
 <h2 id="انتخاب-بازه-تاریخ" dir="rtl">انتخاب بازه تاریخ</h2>
 
 <p dir="rtl">
   برای فعال کردن انتخاب بازه، مقدار <code dir="ltr">range</code> را فعال کنید.
   در این حالت کاربر ابتدا تاریخ شروع و سپس تاریخ پایان را انتخاب می‌کند.
+</p>
+
+<p dir="rtl">
+  اگر <code dir="ltr">range</code> و <code dir="ltr">showTime</code> هم‌زمان فعال باشند، کنترل فعلاً یک انتخاب‌گر زمان مشترک نمایش می‌دهد و همان ساعت و دقیقه روی تاریخ شروع و پایان اعمال می‌شود.
+  برای زمان مستقل شروع و پایان، باید در نسخه‌های بعدی دو time picker جدا اضافه شود.
 </p>
 
 ```html
@@ -220,6 +327,83 @@ new ShardoDatePicker("#range", {
   gregorianFormat: "yyyy-MM-dd"
 });
 ```
+
+---
+
+<h2 id="تنظیمات-سراسری" dir="rtl">تنظیمات سراسری</h2>
+
+<p dir="rtl">
+  برای اینکه یک تنظیم روی همه کنترل‌های ساخته‌شده بعدی اثر بگذارد، از <code dir="ltr">ShardoDatePicker.setDefaults()</code> یا <code dir="ltr">ShardoDatePicker.configure()</code> استفاده کنید.
+  Attributeهای همان input همیشه روی تنظیمات سراسری اولویت دارند.
+</p>
+
+```js
+function getCompanyHolidays() {
+  return ["2026-05-24", "1405/03/14"];
+}
+
+ShardoDatePicker.setDefaults({
+  format: "yyyy/MM/dd",
+  gregorianFormat: "yyyy-MM-dd",
+  showTime: false,
+  autoClose: true,
+  holidays: getCompanyHolidays,
+  showFridayHolidays: true,
+  placement: "auto"
+});
+
+ShardoDatePicker.autoInit();
+```
+
+<p dir="rtl">
+  اگر فایل را مستقیم با <code dir="ltr">script type="module"</code> استفاده می‌کنید و می‌خواهید تنظیمات قبل از auto init داخلی خوانده شود، می‌توانید قبل از بارگذاری فایل، مقدار زیر را روی <code dir="ltr">window</code> قرار دهید.
+</p>
+
+```html
+<script>
+  window.ShardoDatePickerDefaults = {
+    showTime: false,
+    autoClose: true,
+    holidays: () => ["2026-05-24", "1405/03/14"]
+  };
+</script>
+<script type="module" src="./src/ShardoDatePicker.js"></script>
+```
+
+<div dir="rtl">
+<h3 dir="rtl">متدهای تنظیمات سراسری</h3>
+
+<table dir="rtl">
+  <thead>
+    <tr>
+      <th>متد</th>
+      <th>کاربرد</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.setDefaults(options)</code></td>
+      <td>تنظیم پیش‌فرض‌های عمومی برای کنترل‌هایی که بعداً ساخته می‌شوند.</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.configure(options)</code></td>
+      <td>نام جایگزین برای <code dir="ltr">setDefaults</code>.</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.setDefaults(options, true)</code></td>
+      <td>علاوه بر تنظیم کنترل‌های بعدی، همان تنظیمات را روی کنترل‌های موجود هم با <code dir="ltr">setOptions</code> اعمال می‌کند.</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.getDefaults()</code></td>
+      <td>دریافت تنظیمات پیش‌فرض نهایی بعد از merge شدن تنظیمات داخلی و سراسری.</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.resetDefaults()</code></td>
+      <td>پاک کردن تنظیمات سراسری ثبت‌شده با JavaScript.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 ---
 
@@ -352,6 +536,32 @@ input.addEventListener("shardo-datepicker:change", (event) => {
   </tbody>
 </table>
 </div>
+
+---
+
+<h2 id="نمایش-موبایل" dir="rtl">نمایش موبایل</h2>
+
+<p dir="rtl">
+  در دسکتاپ، محل نمایش popup با گزینه <code dir="ltr">placement</code> کنترل می‌شود.
+  مقدار پیش‌فرض <code dir="ltr">auto</code> است و کنترل با توجه به فضای قابل مشاهده، یکی از جهت‌های بالا، پایین، راست یا چپ را انتخاب می‌کند تا نیاز به scroll کمتر شود.
+  مقدارهای صریح <code dir="ltr">bottom</code>، <code dir="ltr">top</code>، <code dir="ltr">right</code> و <code dir="ltr">left</code> نیز پشتیبانی می‌شوند.
+</p>
+
+```html
+<input
+  data-shardo-datepicker
+  data-shardo-datepicker-placement="auto"
+>
+```
+
+<p dir="rtl">
+  در عرض‌های کوچک‌تر از <code dir="ltr">640px</code>، پنل غیر-inline به جای نمایش به صورت popup کنار input، به صورت bottom sheet ثابت در پایین صفحه نمایش داده می‌شود.
+  این رفتار با CSS انجام می‌شود و برای انتخاب لمسی در موبایل فضای پایدارتر و قابل پیش‌بینی‌تری ایجاد می‌کند.
+</p>
+
+<p dir="rtl">
+  حالت <code dir="ltr">inline</code> از این تبدیل مستثنا است و همچنان داخل همان container باقی می‌ماند.
+</p>
 
 ---
 
@@ -520,6 +730,12 @@ data-shardo-datepicker-show-time
   </thead>
   <tbody>
     <tr>
+      <td><code dir="ltr">value</code></td>
+      <td><code dir="ltr">data-shardo-datepicker-<wbr>value</code></td>
+      <td><code dir="ltr">string | Date | object | array</code><br>پیش‌فرض: <code dir="ltr">null</code></td>
+      <td>مقدار اولیه. ورودی می‌تواند شمسی مثل <code dir="ltr">1405/02/28</code> یا میلادی مثل <code dir="ltr">2026-05-18</code> باشد و hidden input همزمان با مقدار میلادی پر می‌شود. در JavaScript برای بازه می‌تواند آرایه <code dir="ltr">[start, end]</code> یا آبجکت <code dir="ltr">{ start, end }</code> باشد.</td>
+    </tr>
+    <tr>
       <td><code dir="ltr">format</code></td>
       <td><code dir="ltr">data-shardo-datepicker-<wbr>format</code></td>
       <td><code dir="ltr">string</code><br>پیش‌فرض: <code dir="ltr">yyyy/MM/dd HH:mm</code></td>
@@ -580,19 +796,19 @@ data-shardo-datepicker-show-time
       <td><code dir="ltr">min</code></td>
       <td><code dir="ltr">data-shardo-datepicker-<wbr>min</code></td>
       <td><code dir="ltr">string | Date | object | null</code><br>پیش‌فرض: <code dir="ltr">null</code></td>
-      <td>کمترین تاریخ قابل انتخاب. در HTML مقدار شمسی مانند <code dir="ltr">1404/01/01</code> وارد کنید.</td>
+      <td>کمترین تاریخ قابل انتخاب. مقدار می‌تواند شمسی یا میلادی باشد؛ مانند <code dir="ltr">1404/01/01</code> یا <code dir="ltr">2025-03-21</code>.</td>
     </tr>
     <tr>
       <td><code dir="ltr">max</code></td>
       <td><code dir="ltr">data-shardo-datepicker-<wbr>max</code></td>
       <td><code dir="ltr">string | Date | object | null</code><br>پیش‌فرض: <code dir="ltr">null</code></td>
-      <td>بیشترین تاریخ قابل انتخاب.</td>
+      <td>بیشترین تاریخ قابل انتخاب. مقدار می‌تواند شمسی یا میلادی باشد.</td>
     </tr>
     <tr>
       <td><code dir="ltr">disabledDates</code></td>
       <td><code dir="ltr">data-shardo-datepicker-<wbr>disabled-dates</code></td>
-      <td><code dir="ltr">array</code><br>پیش‌فرض: <code dir="ltr">[]</code></td>
-      <td>لیست تاریخ‌های غیرفعال شمسی. نمونه: <code dir="ltr">1405/01/13,1405/02/15</code></td>
+      <td><code dir="ltr">array | string | function</code><br>پیش‌فرض: <code dir="ltr">[]</code></td>
+      <td>لیست تاریخ‌های غیرفعال. هر مورد می‌تواند شمسی یا میلادی باشد. نمونه: <code dir="ltr">1405/01/13,2026-05-18</code></td>
     </tr>
     <tr>
       <td><code dir="ltr">disablePast</code></td>
@@ -615,8 +831,8 @@ data-shardo-datepicker-show-time
     <tr>
       <td><code dir="ltr">holidays</code></td>
       <td><code dir="ltr">data-shardo-datepicker-<wbr>holidays</code></td>
-      <td><code dir="ltr">array</code><br>پیش‌فرض: <code dir="ltr">[]</code></td>
-      <td>تعطیلی‌های سفارشی شمسی. این گزینه فقط ظاهر روز را تغییر می‌دهد.</td>
+      <td><code dir="ltr">array | string | function</code><br>پیش‌فرض: <code dir="ltr">[]</code></td>
+      <td>تعطیلی‌های سفارشی. هر مورد می‌تواند شمسی یا میلادی باشد. این گزینه فقط ظاهر روز را تغییر می‌دهد.</td>
     </tr>
   </tbody>
 </table>
@@ -689,6 +905,12 @@ data-shardo-datepicker-show-time
       <td><code dir="ltr">data-shardo-datepicker-<wbr>inline</code></td>
       <td><code dir="ltr">boolean</code><br>پیش‌فرض: <code dir="ltr">false</code></td>
       <td>نمایش ثابت تقویم داخل container به جای popup.</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">placement</code></td>
+      <td><code dir="ltr">data-shardo-datepicker-<wbr>placement</code></td>
+      <td><code dir="ltr">string</code><br>پیش‌فرض: <code dir="ltr">auto</code></td>
+      <td>محل نمایش popup در دسکتاپ. مقدارهای قابل قبول: <code dir="ltr">auto</code>، <code dir="ltr">bottom</code>، <code dir="ltr">top</code>، <code dir="ltr">right</code> و <code dir="ltr">left</code>. در موبایل، پنل غیر-inline به صورت bottom sheet نمایش داده می‌شود.</td>
     </tr>
     <tr>
       <td><code dir="ltr">appendTo</code></td>
@@ -785,11 +1007,6 @@ data-shardo-datepicker-show-time
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <td><code dir="ltr">value</code></td>
-      <td><code dir="ltr">string | Date | object | array</code></td>
-      <td>مقدار اولیه. در حالت بازه می‌تواند آرایه <code dir="ltr">[start, end]</code> یا آبجکت <code dir="ltr">{ start, end }</code> باشد.</td>
-    </tr>
     <tr>
       <td><code dir="ltr">autoInit</code></td>
       <td><code dir="ltr">boolean</code></td>
@@ -923,6 +1140,22 @@ data-shardo-datepicker-show-time
       <td>ساخت خودکار کنترل‌ها از روی <code dir="ltr">data-shardo-datepicker</code></td>
     </tr>
     <tr>
+      <td><code dir="ltr">ShardoDatePicker.setDefaults(options)</code></td>
+      <td>ثبت تنظیمات سراسری برای کنترل‌هایی که بعداً ساخته می‌شوند</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.configure(options)</code></td>
+      <td>نام جایگزین برای ثبت تنظیمات سراسری</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.getDefaults()</code></td>
+      <td>دریافت تنظیمات پیش‌فرض نهایی</td>
+    </tr>
+    <tr>
+      <td><code dir="ltr">ShardoDatePicker.resetDefaults()</code></td>
+      <td>پاک کردن تنظیمات سراسری JavaScript</td>
+    </tr>
+    <tr>
       <td><code dir="ltr">ShardoDatePickerUtils</code></td>
       <td>ابزارهای تبدیل، parse، format، کبیسه و اعتبارسنجی</td>
     </tr>
@@ -1010,6 +1243,14 @@ tests/fixtures/user-settings.html
       <td>مقدار شمسی input، مقدار میلادی hidden input، selectedText و detail رویدادها</td>
     </tr>
     <tr>
+      <td>ورودی شمسی و میلادی</td>
+      <td>تشخیص مقدارهای شمسی و میلادی در <code dir="ltr">value</code>، <code dir="ltr">min</code>، <code dir="ltr">max</code>، <code dir="ltr">disabledDates</code>، <code dir="ltr">holidays</code> و مقدار بازه</td>
+    </tr>
+    <tr>
+      <td>تنظیمات سراسری</td>
+      <td>اعمال <code dir="ltr">window.ShardoDatePickerDefaults</code> در auto init، اعمال <code dir="ltr">ShardoDatePicker.setDefaults()</code> روی کنترل‌های جدید و پشتیبانی از function برای لیست تاریخ‌ها</td>
+    </tr>
+    <tr>
       <td>انتخاب تاریخ</td>
       <td>auto close، نبودن دکمه تأیید در حالت date-only، انتخاب روز و بسته شدن popup</td>
     </tr>
@@ -1035,7 +1276,7 @@ tests/fixtures/user-settings.html
     </tr>
     <tr>
       <td>گزینه‌های فقط JavaScript</td>
-      <td><code dir="ltr">value</code>، <code dir="ltr">appendTo</code>، <code dir="ltr">onOpen</code>، <code dir="ltr">onClose</code>، <code dir="ltr">onSelect</code>، <code dir="ltr">onChange</code></td>
+      <td><code dir="ltr">appendTo</code>، <code dir="ltr">onOpen</code>، <code dir="ltr">onClose</code>، <code dir="ltr">onSelect</code>، <code dir="ltr">onChange</code></td>
     </tr>
     <tr>
       <td>Inline Mode</td>
@@ -1047,7 +1288,7 @@ tests/fixtures/user-settings.html
     </tr>
     <tr>
       <td>Responsive</td>
-      <td>قرار گرفتن popup داخل viewport موبایل</td>
+      <td>جای‌گذاری داینامیک popup در دسکتاپ، جهت‌های قابل تنظیم و نمایش bottom sheet در موبایل</td>
     </tr>
   </tbody>
 </table>

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/src/ShardoDatePicker.css">
+    <style>
+      #relativePortal {
+        position: relative;
+        direction: ltr;
+        margin: 80px auto 0 24px;
+        width: 260px;
+        min-height: 220px;
+      }
+    </style>
+  </head>
+  <body>
+    <label for="initialPicker">initial picker</label>
+    <input id="initialPicker" data-shardo-datepicker data-shardo-datepicker-value="2026-05-03" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
+
+    <label for="focusPicker">focus picker</label>
+    <input id="focusPicker" data-shardo-datepicker data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
+
+    <label for="rangeTodayPicker">range today picker</label>
+    <input id="rangeTodayPicker" data-shardo-datepicker data-shardo-datepicker-range="true" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
+
+    <label for="weekStartPicker">week start picker</label>
+    <input id="weekStartPicker" data-shardo-datepicker data-shardo-datepicker-week-start="0" data-shardo-datepicker-weekdays="SA,SU,MO,TU,WE,TH,FR" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true">
+
+    <div id="relativePortal">
+      <label for="appendStringPicker">append string picker</label>
+      <input id="appendStringPicker">
+    </div>
+
+    <script type="module">
+      import { ShardoDatePicker } from "/src/ShardoDatePicker.js";
+      window.nativeEvents = [];
+      document.querySelector("#initialPicker").addEventListener("input", () => window.nativeEvents.push("input"));
+      document.querySelector("#initialPicker").addEventListener("change", () => window.nativeEvents.push("change"));
+      window.appendStringPicker = new ShardoDatePicker("#appendStringPicker", {
+        appendTo: "#relativePortal",
+        placement: "right",
+        showTime: false,
+        autoClose: true,
+        format: "yyyy/MM/dd",
+        gregorianFormat: "yyyy-MM-dd"
+      });
+      window.ready = true;
+    </script>
+  </body>
+</html>
