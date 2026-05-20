@@ -31,6 +31,7 @@ test("parses every configured option from attributes and JS options", async ({ p
     const jsOnly = window.jsPicker.options;
     return {
       allSettings: {
+        value: allSettings.value,
         format: allSettings.format,
         gregorianFormat: allSettings.gregorianFormat,
         showTime: allSettings.showTime,
@@ -54,6 +55,7 @@ test("parses every configured option from attributes and JS options", async ({ p
         hiddenInputId: allSettings.hiddenInputId,
         gregorianRangeSeparator: allSettings.gregorianRangeSeparator,
         inline: allSettings.inline,
+        placement: allSettings.placement,
         weekStart: allSettings.weekStart,
         autoInit: allSettings.autoInit,
         showSelectedText: allSettings.showSelectedText,
@@ -74,6 +76,7 @@ test("parses every configured option from attributes and JS options", async ({ p
   });
 
   expect(snapshot.allSettings).toMatchObject({
+    value: "1405/02/01",
     format: "yyyy/MM/dd",
     gregorianFormat: "yyyy-MM-dd",
     showTime: false,
@@ -97,6 +100,7 @@ test("parses every configured option from attributes and JS options", async ({ p
     hiddenInputId: "all_settings_gregorian",
     gregorianRangeSeparator: "..",
     inline: false,
+    placement: "auto",
     weekStart: 6,
     autoInit: true,
     showSelectedText: true,
@@ -125,12 +129,41 @@ test("initializes from attributes and applies visible date-only settings", async
   const panel = await openByLabel(page, "all settings");
   await expect(panel.locator(".shardo-datepicker-view-button")).toHaveText("Ordibehesht 1405");
   await expect(panel.locator(".shardo-datepicker-weekday")).toHaveText(["SA", "SU", "MO", "TU", "WE", "TH", "FR"]);
+  await expect(panel.getByLabel("ماه قبل").locator("path").first()).toHaveAttribute("d", "m9 18 6-6-6-6");
+  await expect(panel.getByLabel("ماه بعد").locator("path").first()).toHaveAttribute("d", "m15 18-6-6 6-6");
+  const monthNavigation = await panel.locator(".shardo-datepicker-header > .shardo-datepicker-button").evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().x));
+  expect(monthNavigation[0]).toBeGreaterThan(monthNavigation[1]);
   await expect(day(page, 1405, 1, 31)).toBeDisabled();
   await expect(day(page, 1405, 2, 10)).toBeDisabled();
   await expect(day(page, 1405, 2, 30)).toBeDisabled();
   await expect(day(page, 1405, 2, 15)).toHaveClass(/shardo-datepicker-is-holiday/);
   await expect(day(page, 1405, 2, 4)).toHaveClass(/shardo-datepicker-is-holiday/);
   await expect(panel.locator(".shardo-datepicker-is-primary")).toBeHidden();
+  await expect(panel.getByText("امروز", { exact: true })).toBeVisible();
+  await expect(panel.getByLabel("پاک کردن").locator("path").first()).toHaveAttribute("d", "M3 6h18");
+  const footerLayout = await panel.locator(".shardo-datepicker-footer").evaluate((footer) => {
+    const today = footer.querySelector(":scope > .shardo-datepicker-button");
+    const actions = footer.querySelector(".shardo-datepicker-footer-actions");
+    return {
+      todayX: today.getBoundingClientRect().x,
+      actionsX: actions.getBoundingClientRect().x,
+      visibleActions: [...actions.querySelectorAll("button")].filter((button) => getComputedStyle(button).display !== "none").length
+    };
+  });
+  expect(footerLayout.todayX).toBeGreaterThan(footerLayout.actionsX);
+  expect(footerLayout.visibleActions).toBe(2);
+
+  await panel.locator(".shardo-datepicker-view-button").click();
+  await expect(panel.locator(".shardo-datepicker-month-grid")).toHaveClass(/shardo-datepicker-is-visible/);
+  await expect(panel.locator(".shardo-datepicker-year-grid")).not.toHaveClass(/shardo-datepicker-is-visible/);
+  await panel.locator(".shardo-datepicker-switcher-tab").nth(1).click();
+  await expect(panel.locator(".shardo-datepicker-year-grid")).toHaveClass(/shardo-datepicker-is-visible/);
+  await expect(panel.locator(".shardo-datepicker-month-grid")).not.toHaveClass(/shardo-datepicker-is-visible/);
+  await expect(panel.getByLabel("سال قبل").locator("path").first()).toHaveAttribute("d", "m9 18 6-6-6-6");
+  await expect(panel.getByLabel("سال بعد").locator("path").first()).toHaveAttribute("d", "m15 18-6-6 6-6");
+  const yearNavigation = await panel.locator(".shardo-datepicker-year-bar > .shardo-datepicker-button").evaluateAll((buttons) => buttons.map((button) => button.getBoundingClientRect().x));
+  expect(yearNavigation[0]).toBeGreaterThan(yearNavigation[1]);
+  await panel.locator(".shardo-datepicker-view-button").click();
 
   await day(page, 1405, 2, 13).click();
   await expect(panel).toBeHidden();
@@ -155,6 +188,11 @@ test("shows selected text in the panel and keeps time picker open until confirm"
   await day(page, 1405, 2, 13).click();
   await expect(panel).toBeVisible();
   await expect(panel.locator(".shardo-datepicker-selected-text")).toHaveText("Sunday 13 Ordibehesht 1405");
+  await day(page, 1405, 2, 14).hover();
+  await expect(panel.locator(".shardo-datepicker-selected-text")).toHaveText("Monday 14 Ordibehesht 1405");
+  const daysBox = await panel.locator(".shardo-datepicker-days").boundingBox();
+  await page.mouse.move(daysBox.x - 10, daysBox.y - 10);
+  await expect(panel.locator(".shardo-datepicker-selected-text")).toHaveText("Sunday 13 Ordibehesht 1405");
   await panel.locator(".shardo-datepicker-is-primary").click();
 
   await expect(page.getByLabel("time picker", { exact: true })).toHaveValue("1405/02/13 14:35");
@@ -175,6 +213,7 @@ test("shows range preview while hovering and commits a range with custom separat
   await day(page, 1405, 2, 7).hover();
   await expect(panel.locator(".shardo-datepicker-is-preview")).not.toHaveCount(0);
   await expect(day(page, 1405, 2, 7)).toHaveClass(/shardo-datepicker-is-range-preview-end/);
+  await expect(panel.locator(".shardo-datepicker-selected-text")).toHaveText("چهارشنبه 2 اردیبهشت__دوشنبه 7 اردیبهشت");
   await day(page, 1405, 2, 7).click();
 
   await expect(panel).toBeHidden();
@@ -209,6 +248,116 @@ test("supports JSON attribute configuration", async ({ page }) => {
 
   await expect(page.getByLabel("json picker", { exact: true })).toHaveValue("1405/02/13");
   await expect(page.locator('[name="json_picker"]')).toHaveValue("2026-05-03");
+});
+
+test("accepts Gregorian and Jalali date values in date attributes", async ({ page }) => {
+  const input = page.getByLabel("gregorian attribute picker", { exact: true });
+  await expect(input).toHaveValue("1405/02/13");
+  await expect(page.locator('[name="gregorian_attribute_picker"]')).toHaveValue("2026-05-03");
+
+  const panel = await openByLabel(page, "gregorian attribute picker");
+  await expect(day(page, 1405, 2, 10)).toBeDisabled();
+  await expect(day(page, 1405, 2, 12)).toBeDisabled();
+  await expect(day(page, 1405, 2, 16)).toBeDisabled();
+  await expect(day(page, 1405, 2, 14)).toHaveClass(/shardo-datepicker-is-holiday/);
+  await page.keyboard.press("Escape");
+
+  await expect(page.getByLabel("mixed range value picker", { exact: true })).toHaveValue("1405/02/11__1405/02/15");
+  await expect(page.locator('[name="mixed_range_value_picker"]')).toHaveValue("2026-05-01..2026-05-05");
+});
+
+test("uses window global defaults during attribute auto-init", async ({ page }) => {
+  const snapshot = await page.evaluate(() => {
+    const input = document.querySelector("#globalAttributePicker");
+    const picker = input.shardoDatePicker;
+    return {
+      value: input.value,
+      gregorian: document.querySelector('[name="global_attribute_picker_display_gregorian"]').value,
+      format: picker.options.format,
+      gregorianFormat: picker.options.gregorianFormat,
+      showTime: picker.options.showTime,
+      autoClose: picker.options.autoClose,
+      showFridayHolidays: picker.options.showFridayHolidays,
+      holidaysType: typeof picker.options.holidays,
+      showSelectedText: picker.options.showSelectedText,
+      placement: picker.options.placement
+    };
+  });
+
+  expect(snapshot).toMatchObject({
+    value: "1405/02/13",
+    gregorian: "2026-05-03",
+    format: "yyyy/MM/dd",
+    gregorianFormat: "yyyy-MM-dd",
+    showTime: false,
+    autoClose: true,
+    showFridayHolidays: false,
+    holidaysType: "function",
+    showSelectedText: true,
+    placement: "left"
+  });
+
+  const panel = await openByLabel(page, "global attribute picker");
+  await expect(panel).toHaveAttribute("data-placement", page.viewportSize().width <= 640 ? "sheet" : "left");
+  await expect(day(page, 1405, 2, 4)).not.toHaveClass(/shardo-datepicker-is-holiday/);
+  await expect(day(page, 1405, 2, 14)).toHaveClass(/shardo-datepicker-is-holiday/);
+  await page.mouse.move(1, 1);
+  await expect(panel.locator(".shardo-datepicker-selected-text")).toHaveText("یکشنبه 13 اردیبهشت");
+});
+
+test("applies global defaults to newly created controls", async ({ page }) => {
+  const snapshot = await page.evaluate(() => {
+    window.ShardoDatePicker.setDefaults(() => ({
+      value: "2026-05-03",
+      format: "yyyy/MM/dd",
+      gregorianFormat: "yyyy-MM-dd",
+      showTime: false,
+      autoClose: true,
+      hiddenInputName: "global_configured_picker",
+      min: "2026-05-01",
+      max: "2026-05-05",
+      disabledDates: () => ["2026-05-02"],
+      holidays: () => ["2026-05-04"],
+      showFridayHolidays: false,
+      showSelectedText: true,
+      placement: "top"
+    }));
+    const wrapper = document.createElement("div");
+    const label = document.createElement("label");
+    const input = document.createElement("input");
+    wrapper.className = "field";
+    label.htmlFor = "globalConfiguredPicker";
+    label.textContent = "global configured picker";
+    input.id = "globalConfiguredPicker";
+    input.name = "global_configured_picker_display";
+    input.setAttribute("data-shardo-datepicker", "");
+    wrapper.append(label, input);
+    document.body.append(wrapper);
+    const picker = new window.ShardoDatePicker(input);
+    return {
+      value: input.value,
+      gregorian: document.querySelector('[name="global_configured_picker"]').value,
+      format: picker.options.format,
+      placement: picker.options.placement,
+      showSelectedText: picker.options.showSelectedText
+    };
+  });
+
+  expect(snapshot).toEqual({
+    value: "1405/02/13",
+    gregorian: "2026-05-03",
+    format: "yyyy/MM/dd",
+    placement: "top",
+    showSelectedText: true
+  });
+
+  const panel = await openByLabel(page, "global configured picker");
+  await expect(panel).toHaveAttribute("data-placement", page.viewportSize().width <= 640 ? "sheet" : "top");
+  await expect(day(page, 1405, 2, 10)).toBeDisabled();
+  await expect(day(page, 1405, 2, 12)).toBeDisabled();
+  await expect(day(page, 1405, 2, 16)).toBeDisabled();
+  await expect(day(page, 1405, 2, 14)).toHaveClass(/shardo-datepicker-is-holiday/);
+  await expect(panel.locator(".shardo-datepicker-selected-text")).toHaveText("یکشنبه 13 اردیبهشت");
 });
 
 test("supports readonly, hiddenInput=false, Persian digits, disablePast, and disableFuture", async ({ page }) => {
@@ -254,6 +403,9 @@ test("supports inline mode without a hidden input", async ({ page }) => {
   const panel = inline.locator(".shardo-datepicker-panel");
   await expect(panel).toBeVisible();
   await expect(inline.locator('input[type="hidden"]')).toHaveCount(0);
+  await expect(panel.getByLabel("بستن")).toBeHidden();
+  await expect(panel.getByLabel("پاک کردن")).toBeVisible();
+  await expect(panel.getByText("امروز", { exact: true })).toBeVisible();
 
   await page.locator('#inlinePicker .shardo-datepicker-day[data-year="1405"][data-month="2"][data-day="13"]').click();
   await expect(panel.locator(".shardo-datepicker-is-primary")).toBeVisible();
@@ -336,11 +488,74 @@ test("autoInit does not duplicate existing controls", async ({ page }) => {
   expect(after).toBe(before);
 });
 
-test("keeps the popup inside the mobile viewport", async ({ page }) => {
+test("supports auto and configured desktop placement with mobile sheet fallback", async ({ page }) => {
+  const viewport = page.viewportSize();
+
+  if (viewport.width <= 640) {
+    const panel = await openByLabel(page, "placement auto picker");
+    await expect(panel).toHaveAttribute("data-placement", "sheet");
+    await expect(panel).toHaveCSS("position", "fixed");
+    return;
+  }
+
+  await page.evaluate(() => {
+    const input = document.querySelector("#placementAutoPicker");
+    input.style.position = "fixed";
+    input.style.left = "48px";
+    input.style.bottom = "24px";
+    input.style.width = "220px";
+    input.style.zIndex = "2";
+  });
+
+  let panel = await openByLabel(page, "placement auto picker");
+  await expect(panel).toHaveAttribute("data-placement", "top");
+  const autoLayout = await page.evaluate(() => {
+    const input = document.querySelector("#placementAutoPicker").getBoundingClientRect();
+    const panel = document.querySelector('body > .shardo-datepicker-panel:not(.shardo-datepicker-inline):not([hidden])').getBoundingClientRect();
+    return {
+      inputTop: input.top,
+      panelBottom: panel.bottom
+    };
+  });
+  expect(autoLayout.panelBottom).toBeLessThanOrEqual(autoLayout.inputTop);
+  await page.keyboard.press("Escape");
+
+  await page.evaluate(() => {
+    const input = document.querySelector("#placementRightPicker");
+    input.style.position = "fixed";
+    input.style.left = "24px";
+    input.style.top = "120px";
+    input.style.width = "220px";
+    input.style.zIndex = "2";
+  });
+
+  panel = await openByLabel(page, "placement right picker");
+  await expect(panel).toHaveAttribute("data-placement", "right");
+  const rightLayout = await page.evaluate(() => {
+    const input = document.querySelector("#placementRightPicker").getBoundingClientRect();
+    const panel = document.querySelector('body > .shardo-datepicker-panel:not(.shardo-datepicker-inline):not([hidden])').getBoundingClientRect();
+    return {
+      inputRight: input.right,
+      panelLeft: panel.left
+    };
+  });
+  expect(rightLayout.panelLeft).toBeGreaterThanOrEqual(rightLayout.inputRight);
+});
+
+test("keeps the popup inside desktop viewport and uses a bottom sheet on mobile", async ({ page }) => {
   const panel = await openByLabel(page, "manual picker");
   const box = await panel.boundingBox();
   const viewport = page.viewportSize();
+  const position = await panel.evaluate((element) => getComputedStyle(element).position);
   expect(box.width).toBeLessThanOrEqual(viewport.width);
   expect(box.x).toBeGreaterThanOrEqual(0);
   expect(box.x + box.width).toBeLessThanOrEqual(viewport.width);
+
+  if (viewport.width <= 640) {
+    expect(position).toBe("fixed");
+    expect(Math.abs(viewport.height - box.y - box.height)).toBeLessThanOrEqual(12);
+    expect(box.width).toBeGreaterThanOrEqual(viewport.width - 24);
+  } else {
+    expect(position).toBe("absolute");
+  }
 });

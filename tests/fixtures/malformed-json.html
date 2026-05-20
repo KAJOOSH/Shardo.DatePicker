@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/src/ShardoDatePicker.css">
+  </head>
+  <body>
+    <label for="badPicker">bad picker</label>
+    <input id="badPicker" data-shardo-datepicker='{"format":'>
+    <label for="goodPicker">good picker</label>
+    <input id="goodPicker" data-shardo-datepicker data-shardo-datepicker-show-time="false" data-shardo-datepicker-auto-close="true" data-shardo-datepicker-format="yyyy/MM/dd" data-shardo-datepicker-gregorian-format="yyyy-MM-dd" value="2026-05-03">
+    <script type="module">
+      import "/src/ShardoDatePicker.js";
+      window.ready = true;
+    </script>
+  </body>
+</html>

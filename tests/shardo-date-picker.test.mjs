@@ -19,6 +19,8 @@ test("validates Jalali leap years and Esfand day 30", () => {
   assert.equal(ShardoDatePickerUtils.isValidJalaliDate(1403, 12, 30), true);
   assert.equal(ShardoDatePickerUtils.isJalaliLeap(1404), false);
   assert.equal(ShardoDatePickerUtils.isValidJalaliDate(1404, 12, 30), false);
+  assert.equal(ShardoDatePickerUtils.isValidJalaliDate(0, 1, 1), false);
+  assert.equal(ShardoDatePickerUtils.isValidJalaliDate(10000, 1, 1), false);
   assert.equal(ShardoDatePickerUtils.isValidJalaliDate(1405, 13, 1), false);
 });
 
@@ -34,6 +36,24 @@ test("parses English, Persian, and Arabic digits", () => {
   assert.deepEqual(ShardoDatePickerUtils.parse("۱۴۰۵/۰۲/۲۸"), { jy: 1405, jm: 2, jd: 28, hour: 0, minute: 0 });
   assert.deepEqual(ShardoDatePickerUtils.parse("١٤٠٥/٠٢/٢٨"), { jy: 1405, jm: 2, jd: 28, hour: 0, minute: 0 });
   assert.equal(ShardoDatePickerUtils.parse("1404/12/30"), null);
+});
+
+test("parses Gregorian date input without confusing it with Jalali input", () => {
+  assert.deepEqual(ShardoDatePickerUtils.parse("2026-05-18 09:05"), { jy: 1405, jm: 2, jd: 28, hour: 9, minute: 5 });
+  assert.deepEqual(ShardoDatePickerUtils.parse("gregorian:2026/05/18"), { jy: 1405, jm: 2, jd: 28, hour: 0, minute: 0 });
+  assert.deepEqual(ShardoDatePickerUtils.parse({ gy: 2026, gm: 5, gd: 18, hour: 9, minute: 5 }), { jy: 1405, jm: 2, jd: 28, hour: 9, minute: 5 });
+  assert.deepEqual(ShardoDatePickerUtils.parse("jalali:1700/01/01"), { jy: 1700, jm: 1, jd: 1, hour: 0, minute: 0 });
+  assert.equal(ShardoDatePickerUtils.parse("gregorian:2026/02/29"), null);
+});
+
+test("rejects invalid hour and minute values while parsing dates", () => {
+  assert.equal(ShardoDatePickerUtils.parse("0000/01/01"), null);
+  assert.equal(ShardoDatePickerUtils.parse("jalali:10000/01/01"), null);
+  assert.equal(ShardoDatePickerUtils.parse("1405/02/28 24:00"), null);
+  assert.equal(ShardoDatePickerUtils.parse("1405/02/28 23:60"), null);
+  assert.equal(ShardoDatePickerUtils.parse("2026-05-18 25:90"), null);
+  assert.equal(ShardoDatePickerUtils.parse({ jy: 1405, jm: 2, jd: 28, hour: 25, minute: 0 }), null);
+  assert.equal(ShardoDatePickerUtils.parse({ gy: 2026, gm: 5, gd: 18, hour: 9, minute: 80 }), null);
 });
 
 test("formats Jalali and Gregorian values", () => {

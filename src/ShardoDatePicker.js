@@ -1,4 +1,5 @@
 ﻿const defaults = {
+  value: null,
   format: "yyyy/MM/dd HH:mm",
   showTime: true,
   timeStep: 1,
@@ -23,6 +24,7 @@
   gregorianRangeSeparator: " - ",
   inline: false,
   appendTo: null,
+  placement: "auto",
   weekStart: 6,
   autoInit: true,
   showSelectedText: false,
@@ -51,11 +53,14 @@
   onSelect: null
 };
 
+let globalDefaults = {};
+
 const classNames = {
   icon: "shardo-datepicker-is-icon",
   primary: "shardo-datepicker-is-primary",
   danger: "shardo-datepicker-is-danger",
   active: "shardo-datepicker-is-active",
+  visible: "shardo-datepicker-is-visible",
   open: "shardo-datepicker-is-open",
   outside: "shardo-datepicker-is-outside",
   today: "shardo-datepicker-is-today",
@@ -134,6 +139,27 @@ const isFunction = (value) => typeof value === "function";
 const normalizeNumber = (value) => String(value).replace(/[۰-۹]/g, (digit) => persianDigits.indexOf(digit)).replace(/[٠-٩]/g, (digit) => arabicDigits.indexOf(digit));
 const toPersianDigits = (value) => String(value).replace(/\d/g, (digit) => persianDigits[Number(digit)]);
 const div = (a, b) => Math.floor(a / b);
+const isValidTime = (hour, minute) => Number.isInteger(hour) && Number.isInteger(minute) && hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
+const maxSupportedJalaliYear = 9999;
+const isSupportedJalaliYear = (year) => Number.isInteger(year) && year >= 1 && year <= maxSupportedJalaliYear;
+const isResolvableJalaliYear = (year) => Number.isInteger(year) && year >= 1 && year <= maxSupportedJalaliYear + 1;
+
+function resolveOptionSource(source) {
+  const resolved = isFunction(source) ? source() : source;
+  return resolved && typeof resolved === "object" ? resolved : {};
+}
+
+function browserDefaultOptions() {
+  if (typeof window === "undefined") {
+    return {};
+  }
+
+  return resolveOptionSource(window.ShardoDatePickerDefaults || window.shardoDatePickerDefaults);
+}
+
+function defaultOptions() {
+  return { ...defaults, ...browserDefaultOptions(), ...globalDefaults };
+}
 const cloneDateParts = (value) => value ? { ...value } : null;
 
 function persianParts(date) {
@@ -146,6 +172,10 @@ function persianParts(date) {
 }
 
 function findFarvardinOne(year) {
+  if (!isResolvableJalaliYear(year)) {
+    throw new RangeError("Jalali year is out of supported range.");
+  }
+
   if (farvardinCache.has(year)) {
     return new Date(farvardinCache.get(year));
   }
@@ -187,11 +217,11 @@ function jalaliToGregorian(jy, jm, jd) {
 }
 
 function isJalaliLeap(year) {
-  return jalaliYearDays(year) === 366;
+  return isSupportedJalaliYear(year) && jalaliYearDays(year) === 366;
 }
 
 function isValidJalaliDate(jy, jm, jd) {
-  return Number.isInteger(jy) && Number.isInteger(jm) && Number.isInteger(jd) && jm >= 1 && jm <= 12 && jd >= 1 && jd <= jalaliMonthLength(jy, jm);
+  return isSupportedJalaliYear(jy) && Number.isInteger(jm) && Number.isInteger(jd) && jm >= 1 && jm <= 12 && jd >= 1 && jd <= jalaliMonthLength(jy, jm);
 }
 
 function jalaliMonthLength(year, month) {
@@ -220,6 +250,70 @@ function fromDate(date) {
   };
 }
 
+function parseCalendarMarker(value) {
+  const match = normalizeNumber(value).trim().match(/^(jalali|j|shamsi|persian|شمسی|جلالی|gregorian|g|miladi|میلادی)\s*[:|]\s*(.+)$/i);
+
+  if (!match) {
+    return {
+      calendar: null,
+      value
+    };
+  }
+
+  const key = match[1].toLowerCase();
+  return {
+    calendar: ["gregorian", "g", "miladi", "میلادی"].includes(key) ? "gregorian" : "jalali",
+    value: match[2]
+  };
+}
+
+function parseGregorianParts(gy, gm, gd, hour = 0, minute = 0) {
+  if (!isValidTime(hour, minute)) {
+    return null;
+  }
+
+  const date = new Date(gy, gm - 1, gd, hour, minute, 0, 0);
+
+  if (date.getFullYear() !== gy || date.getMonth() + 1 !== gm || date.getDate() !== gd) {
+    return null;
+  }
+
+  return fromDate(date);
+}
+
+function parseNumericDate(value, calendar) {
+  const numbers = normalizeNumber(value).match(/\d+/g);
+
+  if (!numbers || numbers.length < 3) {
+    return null;
+  }
+
+  const year = Number(numbers[0]);
+  const month = Number(numbers[1]);
+  const day = Number(numbers[2]);
+  const hour = Number(numbers[3] || 0);
+  const minute = Number(numbers[4] || 0);
+  const detectedCalendar = calendar || (year >= 1700 ? "gregorian" : "jalali");
+
+  if (!isValidTime(hour, minute)) {
+    return null;
+  }
+
+  if (detectedCalendar === "gregorian") {
+    return parseGregorianParts(year, month, day, hour, minute);
+  }
+
+  const parts = {
+    jy: year,
+    jm: month,
+    jd: day,
+    hour,
+    minute
+  };
+
+  return isValidJalaliDate(parts.jy, parts.jm, parts.jd) ? parts : null;
+}
+
 function startOfDay(parts) {
   return toDate({ ...parts, hour: 0, minute: 0 }).getTime();
 }
@@ -233,6 +327,14 @@ function parseValue(value) {
     return fromDate(value);
   }
 
+  if (typeof value === "object" && value.gy && value.gm && value.gd) {
+    return parseGregorianParts(Number(value.gy), Number(value.gm), Number(value.gd), Number(value.hour || 0), Number(value.minute || 0));
+  }
+
+  if (typeof value === "object" && value.calendar && value.value) {
+    return parseNumericDate(value.value, String(value.calendar).toLowerCase() === "gregorian" ? "gregorian" : "jalali");
+  }
+
   if (typeof value === "object" && value.jy && value.jm && value.jd) {
     const parts = {
       jy: Number(value.jy),
@@ -242,24 +344,11 @@ function parseValue(value) {
       minute: Number(value.minute || 0)
     };
 
-    return isValidJalaliDate(parts.jy, parts.jm, parts.jd) ? parts : null;
+    return isValidJalaliDate(parts.jy, parts.jm, parts.jd) && isValidTime(parts.hour, parts.minute) ? parts : null;
   }
 
-  const numbers = normalizeNumber(value).match(/\d+/g);
-
-  if (!numbers || numbers.length < 3) {
-    return null;
-  }
-
-  const parts = {
-    jy: Number(numbers[0]),
-    jm: Number(numbers[1]),
-    jd: Number(numbers[2]),
-    hour: Number(numbers[3] || 0),
-    minute: Number(numbers[4] || 0)
-  };
-
-  return isValidJalaliDate(parts.jy, parts.jm, parts.jd) ? parts : null;
+  const marked = parseCalendarMarker(value);
+  return parseNumericDate(marked.value, marked.calendar);
 }
 
 function formatValue(parts, format, usePersianDigits) {
@@ -377,11 +466,38 @@ function makeElement(tag, className, text) {
   return element;
 }
 
+function resolveAppendTarget(target) {
+  if (typeof target === "string") {
+    return document.querySelector(target) || document.body;
+  }
+
+  return target || document.body;
+}
+
 function normalizeDisabledDates(values) {
-  return new Set(values.map((value) => {
+  const list = normalizeList(values);
+  return new Set(list.map((value) => {
     const parts = parseValue(value);
     return parts ? `${parts.jy}/${parts.jm}/${parts.jd}` : "";
   }).filter(Boolean));
+}
+
+function normalizeList(values) {
+  const resolved = isFunction(values) ? values() : values;
+
+  if (!resolved) {
+    return [];
+  }
+
+  if (Array.isArray(resolved)) {
+    return resolved;
+  }
+
+  if (typeof resolved === "string") {
+    return resolved.split(",").map((item) => item.trim()).filter(Boolean);
+  }
+
+  return [resolved];
 }
 
 function parseRangeValue(value, separator) {
@@ -440,24 +556,67 @@ function parseOptionValue(value, fallback) {
 function optionsFromAttributes(element) {
   let options = {};
   const raw = element.getAttribute("data-shardo-datepicker");
+  const baseOptions = defaultOptions();
 
   if (raw && raw.trim().startsWith("{")) {
-    options = JSON.parse(raw);
+    try {
+      options = JSON.parse(raw);
+    } catch {
+      options = {};
+    }
   }
 
-  Object.keys(defaults).forEach((key) => {
+  Object.keys(baseOptions).forEach((key) => {
     const attr = `data-shardo-datepicker-${camelToKebab(key)}`;
 
     if (element.hasAttribute(attr)) {
-      options[key] = parseOptionValue(element.getAttribute(attr), defaults[key]);
+      const fallback = Object.prototype.hasOwnProperty.call(defaults, key) ? defaults[key] : baseOptions[key];
+      options[key] = parseOptionValue(element.getAttribute(attr), fallback);
     }
   });
 
   return options;
 }
 
+const icons = {
+  check: [["path", { d: "M20 6 9 17l-5-5" }]],
+  "chevron-left": [["path", { d: "m15 18-6-6 6-6" }]],
+  "chevron-right": [["path", { d: "m9 18 6-6-6-6" }]],
+  trash: [
+    ["path", { d: "M3 6h18" }],
+    ["path", { d: "M8 6V4h8v2" }],
+    ["path", { d: "m19 6-1 14H6L5 6" }],
+    ["path", { d: "M10 11v6" }],
+    ["path", { d: "M14 11v6" }]
+  ],
+  x: [
+    ["path", { d: "M18 6 6 18" }],
+    ["path", { d: "m6 6 12 12" }]
+  ]
+};
+
+function makeIcon(name) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("fill", "none");
+  svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "2");
+  svg.setAttribute("stroke-linecap", "round");
+  svg.setAttribute("stroke-linejoin", "round");
+  svg.setAttribute("aria-hidden", "true");
+  svg.classList.add("shardo-datepicker-icon");
+
+  icons[name].forEach(([tag, attrs]) => {
+    const element = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    Object.entries(attrs).forEach(([key, value]) => element.setAttribute(key, value));
+    svg.appendChild(element);
+  });
+
+  return svg;
+}
+
 function setButtonIcon(button, icon, label) {
-  button.textContent = icon;
+  button.replaceChildren(makeIcon(icon));
   button.title = label;
   button.setAttribute("aria-label", label);
   button.classList.add(classNames.icon);
@@ -531,6 +690,16 @@ function themeContextTargets(source) {
   return [...new Set(targets.filter(Boolean))];
 }
 
+function clampNumber(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function positionOverflow(position, panelWidth, panelHeight, margin) {
+  const right = position.x + panelWidth;
+  const bottom = position.y + panelHeight;
+  return Math.max(0, margin - position.x) + Math.max(0, right - window.innerWidth + margin) + Math.max(0, margin - position.y) + Math.max(0, bottom - window.innerHeight + margin);
+}
+
 export class ShardoDatePicker {
   constructor(input, options = {}) {
     this.input = typeof input === "string" ? document.querySelector(input) : input;
@@ -539,13 +708,14 @@ export class ShardoDatePicker {
       throw new Error("ShardoDatePicker input was not found.");
     }
 
-    this.options = { ...defaults, ...options };
+    this.options = { ...defaultOptions(), ...options };
     this.disabledDates = normalizeDisabledDates(this.options.disabledDates);
     this.holidays = normalizeDisabledDates(this.options.holidays);
     this.isRange = Boolean(this.options.range);
     this.rangeStart = null;
     this.rangeEnd = null;
     this.hoveredRangeEnd = null;
+    this.hoveredDay = null;
     this.selected = null;
     this.syncingInput = false;
     this.syncingHidden = false;
@@ -562,14 +732,20 @@ export class ShardoDatePicker {
 
     this.view = cloneDateParts(this.selected || this.rangeStart) || fromDate(new Date());
     this.isOpen = false;
+    this.ignoreNextDocumentClick = false;
     this.boundDocumentClick = this.handleDocumentClick.bind(this);
-    this.boundInputFocus = this.open.bind(this);
-    this.boundInputClick = this.open.bind(this);
+    this.boundInputFocus = this.handleInputOpen.bind(this);
+    this.boundInputClick = this.handleInputOpen.bind(this);
     this.boundInputInput = this.handleInputInput.bind(this);
     this.boundInputChange = this.handleInputChange.bind(this);
     this.boundKeyDown = this.handleKeyDown.bind(this);
     this.boundDaysMouseMove = this.handleDaysMouseMove.bind(this);
     this.boundThemeChange = this.syncThemeClasses.bind(this);
+    this.boundPosition = () => {
+      if (this.isOpen) {
+        this.position();
+      }
+    };
     this.build();
     this.bind();
     this.setupThemeSync();
@@ -609,19 +785,19 @@ export class ShardoDatePicker {
     this.applyThemeClasses();
 
     this.header = makeElement("div", "shardo-datepicker-header");
-    this.prevButton = makeElement("button", "shardo-datepicker-button", "‹");
-    this.nextButton = makeElement("button", "shardo-datepicker-button", "›");
+    this.prevButton = makeElement("button", "shardo-datepicker-button");
+    this.nextButton = makeElement("button", "shardo-datepicker-button");
     this.prevButton.type = "button";
     this.nextButton.type = "button";
-    this.prevButton.setAttribute("aria-label", "ماه قبل");
-    this.nextButton.setAttribute("aria-label", "ماه بعد");
+    setButtonIcon(this.prevButton, "chevron-right", "ماه قبل");
+    setButtonIcon(this.nextButton, "chevron-left", "ماه بعد");
 
     this.title = makeElement("button", "shardo-datepicker-view-button");
     this.title.type = "button";
     this.title.setAttribute("aria-expanded", "false");
-    this.header.append(this.nextButton, this.title, this.prevButton);
+    this.header.append(this.prevButton, this.title, this.nextButton);
     this.switcher = makeElement("div", "shardo-datepicker-switcher");
-    this.switcher.hidden = true;
+    this.switcher.setAttribute("aria-hidden", "true");
     this.switcherTabs = makeElement("div", "shardo-datepicker-switcher-tabs");
     this.monthTabButton = makeElement("button", "shardo-datepicker-switcher-tab", "ماه");
     this.yearTabButton = makeElement("button", "shardo-datepicker-switcher-tab", "سال");
@@ -629,17 +805,19 @@ export class ShardoDatePicker {
     this.yearTabButton.type = "button";
     this.switcherTabs.append(this.monthTabButton, this.yearTabButton);
     this.yearBar = makeElement("div", "shardo-datepicker-year-bar");
-    this.yearPrevButton = makeElement("button", "shardo-datepicker-button", "‹");
-    this.yearNextButton = makeElement("button", "shardo-datepicker-button", "›");
+    this.yearPrevButton = makeElement("button", "shardo-datepicker-button");
+    this.yearNextButton = makeElement("button", "shardo-datepicker-button");
     this.yearText = makeElement("div", "shardo-datepicker-year-text");
     this.yearPrevButton.type = "button";
     this.yearNextButton.type = "button";
-    this.yearPrevButton.setAttribute("aria-label", "سال قبل");
-    this.yearNextButton.setAttribute("aria-label", "سال بعد");
-    this.yearBar.append(this.yearNextButton, this.yearText, this.yearPrevButton);
+    setButtonIcon(this.yearPrevButton, "chevron-right", "سال قبل");
+    setButtonIcon(this.yearNextButton, "chevron-left", "سال بعد");
+    this.yearBar.append(this.yearPrevButton, this.yearText, this.yearNextButton);
     this.monthGrid = makeElement("div", "shardo-datepicker-month-grid");
     this.yearGrid = makeElement("div", "shardo-datepicker-year-grid");
-    this.switcher.append(this.switcherTabs, this.yearBar, this.monthGrid, this.yearGrid);
+    this.switcherPanel = makeElement("div", "shardo-datepicker-switcher-panel");
+    this.switcherPanel.append(this.monthGrid, this.yearGrid);
+    this.switcher.append(this.switcherTabs, this.yearBar, this.switcherPanel);
 
     this.weekdays = makeElement("div", "shardo-datepicker-weekdays");
     this.days = makeElement("div", "shardo-datepicker-days");
@@ -665,13 +843,15 @@ export class ShardoDatePicker {
     this.clearButton = makeElement("button", `shardo-datepicker-button ${classNames.danger}`);
     this.cancelButton = makeElement("button", "shardo-datepicker-button");
     this.okButton = makeElement("button", `shardo-datepicker-button ${classNames.primary}`);
-    setButtonIcon(this.clearButton, "×", "پاک کردن");
-    setButtonIcon(this.cancelButton, "×", "بستن");
-    setButtonIcon(this.okButton, "✓", "تایید");
+    this.footerActions = makeElement("div", "shardo-datepicker-footer-actions");
+    setButtonIcon(this.clearButton, "trash", "پاک کردن");
+    setButtonIcon(this.cancelButton, "x", "بستن");
+    setButtonIcon(this.okButton, "check", "تایید");
     [this.todayButton, this.clearButton, this.cancelButton, this.okButton].forEach((button) => {
       button.type = "button";
     });
-    this.footer.append(this.todayButton, this.clearButton, this.cancelButton, this.okButton);
+    this.footerActions.append(this.okButton, this.cancelButton, this.clearButton);
+    this.footer.append(this.todayButton, this.footerActions);
 
     this.panel.append(this.header, this.switcher, this.weekdays, this.days, this.selectedText);
 
@@ -682,7 +862,7 @@ export class ShardoDatePicker {
     this.panel.append(this.footer);
     this.renderFooter();
 
-    const parent = this.options.inline ? this.input || document.body : this.options.appendTo || document.body;
+    const parent = this.options.inline ? this.input || document.body : resolveAppendTarget(this.options.appendTo);
     parent.appendChild(this.panel);
   }
 
@@ -703,7 +883,8 @@ export class ShardoDatePicker {
     this.yearPrevButton.addEventListener("click", () => this.changeSwitcherYear(-1));
     this.yearNextButton.addEventListener("click", () => this.changeSwitcherYear(1));
     this.days.addEventListener("mousemove", this.boundDaysMouseMove);
-    this.days.addEventListener("mouseleave", () => this.clearRangePreview());
+    this.days.addEventListener("mouseleave", () => this.clearDayPreview());
+    this.days.addEventListener("pointerleave", () => this.clearDayPreview());
     this.hourInput.addEventListener("change", () => this.normalizeTimeInputs());
     this.minuteInput.addEventListener("change", () => this.normalizeTimeInputs());
     this.todayButton.addEventListener("click", () => this.selectToday());
@@ -711,6 +892,8 @@ export class ShardoDatePicker {
     this.cancelButton.addEventListener("click", () => this.close());
     this.okButton.addEventListener("click", () => this.commit(true));
     document.addEventListener("click", this.boundDocumentClick);
+    window.addEventListener("resize", this.boundPosition);
+    window.addEventListener("scroll", this.boundPosition, true);
   }
 
   render() {
@@ -724,11 +907,12 @@ export class ShardoDatePicker {
 
   renderFooter() {
     this.okButton.hidden = !this.shouldShowConfirmButton();
+    this.cancelButton.hidden = Boolean(this.options.inline);
     this.footer.classList.toggle(classNames.hasConfirm, this.shouldShowConfirmButton());
   }
 
   renderSelectedText() {
-    const text = this.getSelectedText();
+    const text = this.getPreviewSelectedText() || this.getSelectedText();
     this.selectedText.hidden = !this.options.showSelectedText || !text;
     this.selectedText.textContent = text;
   }
@@ -742,8 +926,10 @@ export class ShardoDatePicker {
 
   renderSwitcher() {
     this.yearText.textContent = this.options.usePersianDigits ? toPersianDigits(this.view.jy) : String(this.view.jy);
-    this.monthGrid.hidden = this.switcherMode !== "month";
-    this.yearGrid.hidden = this.switcherMode !== "year";
+    this.monthGrid.classList.toggle(classNames.visible, this.switcherMode === "month");
+    this.yearGrid.classList.toggle(classNames.visible, this.switcherMode === "year");
+    this.monthGrid.setAttribute("aria-hidden", this.switcherMode === "month" ? "false" : "true");
+    this.yearGrid.setAttribute("aria-hidden", this.switcherMode === "year" ? "false" : "true");
     this.monthTabButton.classList.toggle(classNames.active, this.switcherMode === "month");
     this.yearTabButton.classList.toggle(classNames.active, this.switcherMode === "year");
     this.monthGrid.innerHTML = "";
@@ -788,7 +974,9 @@ export class ShardoDatePicker {
 
   renderWeekdays() {
     this.weekdays.innerHTML = "";
-    this.options.weekdays.forEach((day) => {
+    const shift = (Number(this.options.weekStart) - 6 + 7) % 7;
+    const weekdays = this.options.weekdays.map((_, index, items) => items[(index + shift) % items.length]);
+    weekdays.forEach((day) => {
       this.weekdays.appendChild(makeElement("div", "shardo-datepicker-weekday", day));
     });
   }
@@ -936,18 +1124,22 @@ export class ShardoDatePicker {
         this.rangeStart = next;
         this.rangeEnd = null;
         this.hoveredRangeEnd = null;
+        this.hoveredDay = null;
       } else if (sameDay(next, this.rangeStart)) {
         this.rangeEnd = null;
         this.hoveredRangeEnd = null;
+        this.hoveredDay = null;
       } else {
         this.rangeEnd = next;
         this.hoveredRangeEnd = null;
+        this.hoveredDay = null;
       }
 
       this.selected = next;
       this.view = cloneDateParts(next);
     } else {
       this.selected = next;
+      this.hoveredDay = null;
       this.view = cloneDateParts(this.selected);
     }
 
@@ -964,11 +1156,18 @@ export class ShardoDatePicker {
   }
 
   previewRange(parts) {
-    if (!this.isRange || !this.rangeStart || this.rangeEnd || this.isDisabled(parts)) {
+    if (this.isDisabled(parts)) {
       return;
     }
 
-    if (sameDay(parts, this.hoveredRangeEnd)) {
+    if (sameDay(parts, this.hoveredDay) && (!this.isRange || sameDay(parts, this.hoveredRangeEnd))) {
+      return;
+    }
+
+    this.hoveredDay = cloneDateParts(parts);
+
+    if (!this.isRange || !this.rangeStart || this.rangeEnd) {
+      this.renderSelectedText();
       return;
     }
 
@@ -976,12 +1175,13 @@ export class ShardoDatePicker {
     this.render();
   }
 
-  clearRangePreview() {
-    if (!this.hoveredRangeEnd) {
+  clearDayPreview() {
+    if (!this.hoveredRangeEnd && !this.hoveredDay) {
       return;
     }
 
     this.hoveredRangeEnd = null;
+    this.hoveredDay = null;
     this.render();
   }
 
@@ -996,6 +1196,15 @@ export class ShardoDatePicker {
       this.rangeStart = today;
       this.rangeEnd = null;
       this.selected = today;
+      this.view = cloneDateParts(today);
+      this.render();
+      this.emit("select");
+
+      if (isFunction(this.options.onSelect)) {
+        this.options.onSelect(this.getValue(), this.getDate(), this.getShardoDatePickerJalali());
+      }
+
+      return;
     } else {
       this.selected = today;
     }
@@ -1099,12 +1308,15 @@ export class ShardoDatePicker {
 
     const previousValue = this.input?.value || "";
     const value = this.getValue();
+    const shouldDispatchNative = Boolean(emitChange && previousValue !== value);
 
     if (this.input) {
       this.syncingInput = true;
       this.input.value = value;
-      this.input.dispatchEvent(new Event("input", { bubbles: true }));
-      this.input.dispatchEvent(new Event("change", { bubbles: true }));
+      if (shouldDispatchNative) {
+        this.input.dispatchEvent(new Event("input", { bubbles: true }));
+        this.input.dispatchEvent(new Event("change", { bubbles: true }));
+      }
       this.syncingInput = false;
     }
 
@@ -1175,6 +1387,22 @@ export class ShardoDatePicker {
     return formatSelectedTextValue(this.selected, this.options);
   }
 
+  getPreviewSelectedText() {
+    if (!this.hoveredDay) {
+      return "";
+    }
+
+    if (this.isRange && this.rangeStart && !this.rangeEnd) {
+      const start = compareDay(this.hoveredDay, this.rangeStart) < 0 ? this.hoveredDay : this.rangeStart;
+      const end = compareDay(this.hoveredDay, this.rangeStart) < 0 ? this.rangeStart : this.hoveredDay;
+      const startText = formatSelectedTextValue(start, this.options);
+      const endText = formatSelectedTextValue(end, this.options);
+      return endText ? `${startText}${this.options.selectedTextRangeSeparator}${endText}` : startText;
+    }
+
+    return formatSelectedTextValue(this.hoveredDay, this.options);
+  }
+
   setValue(value, emitChange = true) {
     if (this.isRange) {
       const parsedRange = parseRangeValue(value, this.options.rangeSeparator);
@@ -1210,6 +1438,7 @@ export class ShardoDatePicker {
     this.rangeStart = null;
     this.rangeEnd = null;
     this.hoveredRangeEnd = null;
+    this.hoveredDay = null;
 
     if (this.input) {
       this.syncingInput = true;
@@ -1276,14 +1505,47 @@ export class ShardoDatePicker {
       return;
     }
 
+    if (window.matchMedia?.("(max-width: 640px)").matches) {
+      this.panel.style.top = "";
+      this.panel.style.left = "";
+      this.panel.dataset.placement = "sheet";
+      return;
+    }
+
     const rect = this.input.getBoundingClientRect();
-    const top = rect.bottom + window.scrollY + 8;
+    const gap = 8;
+    const margin = 12;
     const panelWidth = this.panel.offsetWidth;
-    const left = window.innerWidth <= 420
-      ? window.scrollX + Math.max(10, (window.innerWidth - panelWidth) / 2)
-      : Math.min(window.scrollX + rect.left, window.scrollX + window.innerWidth - panelWidth - 12);
-    this.panel.style.top = `${Math.max(12, top)}px`;
-    this.panel.style.left = `${Math.max(12, left)}px`;
+    const panelHeight = this.panel.offsetHeight;
+    const requestedPlacement = ["bottom", "top", "right", "left"].includes(this.options.placement) ? this.options.placement : "auto";
+    const candidates = [
+      { name: "bottom", x: rect.left, y: rect.bottom + gap },
+      { name: "top", x: rect.left, y: rect.top - panelHeight - gap },
+      { name: "right", x: rect.right + gap, y: rect.top },
+      { name: "left", x: rect.left - panelWidth - gap, y: rect.top }
+    ].map((candidate, index) => ({
+      ...candidate,
+      index,
+      score: positionOverflow(candidate, panelWidth, panelHeight, margin)
+    }));
+    const selected = requestedPlacement === "auto"
+      ? [...candidates].sort((a, b) => a.score - b.score || a.index - b.index)[0]
+      : candidates.find((candidate) => candidate.name === requestedPlacement);
+    const maxLeft = Math.max(margin, window.innerWidth - panelWidth - margin);
+    const maxTop = Math.max(margin, window.innerHeight - panelHeight - margin);
+    const left = clampNumber(selected.x, margin, maxLeft);
+    const top = clampNumber(selected.y, margin, maxTop);
+    const offsetParent = this.panel.offsetParent;
+
+    if (offsetParent && offsetParent !== document.body && offsetParent !== document.documentElement) {
+      const parentRect = offsetParent.getBoundingClientRect();
+      this.panel.style.top = `${top - parentRect.top + offsetParent.scrollTop}px`;
+      this.panel.style.left = `${left - parentRect.left + offsetParent.scrollLeft}px`;
+    } else {
+      this.panel.style.top = `${window.scrollY + top}px`;
+      this.panel.style.left = `${window.scrollX + left}px`;
+    }
+    this.panel.dataset.placement = selected.name;
   }
 
   changeMonth(offset) {
@@ -1307,24 +1569,22 @@ export class ShardoDatePicker {
   }
 
   toggleSwitcher() {
-    this.switcher.hidden ? this.openSwitcher() : this.closeSwitcher();
+    this.switcher.classList.contains(classNames.open) ? this.closeSwitcher() : this.openSwitcher();
   }
 
   openSwitcher() {
-    this.switcher.hidden = false;
     this.setSwitcherMode(this.switcherMode);
     this.title.setAttribute("aria-expanded", "true");
-    requestAnimationFrame(() => this.switcher.classList.add(classNames.open));
+    this.switcher.setAttribute("aria-hidden", "false");
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => this.switcher.classList.add(classNames.open));
+    });
   }
 
   closeSwitcher() {
     this.switcher.classList.remove(classNames.open);
     this.title.setAttribute("aria-expanded", "false");
-    window.setTimeout(() => {
-      if (!this.switcher.classList.contains(classNames.open)) {
-        this.switcher.hidden = true;
-      }
-    }, 160);
+    this.switcher.setAttribute("aria-hidden", "true");
   }
 
   handleDocumentClick(event) {
@@ -1334,11 +1594,26 @@ export class ShardoDatePicker {
 
     const path = event.composedPath();
 
+    if (this.ignoreNextDocumentClick) {
+      this.ignoreNextDocumentClick = false;
+      return;
+    }
+
     if (path.includes(this.panel) || (this.input && path.includes(this.input))) {
       return;
     }
 
     this.close();
+  }
+
+  handleInputOpen(event) {
+    if (event?.type === "focus" || event?.type === "click") {
+      this.ignoreNextDocumentClick = true;
+      window.setTimeout(() => {
+        this.ignoreNextDocumentClick = false;
+      }, 0);
+    }
+    this.open();
   }
 
   handleInputInput() {
@@ -1397,9 +1672,45 @@ export class ShardoDatePicker {
     this.options = { ...this.options, ...options };
     this.disabledDates = normalizeDisabledDates(this.options.disabledDates);
     this.holidays = normalizeDisabledDates(this.options.holidays);
+    this.isRange = Boolean(this.options.range);
+
+    if (this.input && !this.options.inline) {
+      this.input.readOnly = Boolean(this.options.inputReadonly);
+
+      if (this.options.hiddenInput && !this.hiddenInput) {
+        this.hiddenInput = makeElement("input");
+        this.hiddenInput.type = "hidden";
+        this.input.insertAdjacentElement("afterend", this.hiddenInput);
+      }
+
+      if (!this.options.hiddenInput && this.hiddenInput) {
+        this.hiddenInput.remove();
+        this.hiddenInput = null;
+      }
+
+      if (this.hiddenInput) {
+        this.hiddenInput.name = this.options.hiddenInputName || `${this.input.name || this.input.id || "jalali_date"}_gregorian`;
+
+        if (this.options.hiddenInputId) {
+          this.hiddenInput.id = this.options.hiddenInputId;
+        } else {
+          this.hiddenInput.removeAttribute("id");
+        }
+      }
+    }
+
+    if (this.options.showTime && !this.time.isConnected) {
+      this.panel.insertBefore(this.time, this.footer);
+    }
+
+    if (!this.options.showTime && this.time.isConnected) {
+      this.time.remove();
+    }
+
     this.applyThemeClasses();
     this.setupThemeSync();
     this.render();
+    this.syncHiddenInput();
   }
 
   applyThemeClasses() {
@@ -1554,6 +1865,8 @@ export class ShardoDatePicker {
   }
 
   destroy() {
+    const sourceInput = this.input;
+
     if (this.input && !this.options.inline) {
       this.input.classList.remove("shardo-datepicker-input");
       this.input.removeEventListener("focus", this.boundInputFocus);
@@ -1565,12 +1878,18 @@ export class ShardoDatePicker {
 
     this.days.removeEventListener("mousemove", this.boundDaysMouseMove);
     document.removeEventListener("click", this.boundDocumentClick);
+    window.removeEventListener("resize", this.boundPosition);
+    window.removeEventListener("scroll", this.boundPosition, true);
     this.themeObserver?.disconnect();
     this.themeMedia?.removeEventListener?.("change", this.boundThemeChange);
     this.themeMedia?.removeListener?.(this.boundThemeChange);
     this.input?.classList.remove(classNames.themeAuto, classNames.themeDark, classNames.themeDarkResolved, classNames.themeBootstrap5);
     this.hiddenInput?.remove();
     this.panel.remove();
+
+    if (sourceInput?.shardoDatePicker === this) {
+      delete sourceInput.shardoDatePicker;
+    }
   }
 
   static autoInit(root = document) {
@@ -1579,9 +1898,44 @@ export class ShardoDatePicker {
         return element.shardoDatePicker;
       }
 
-      element.shardoDatePicker = new ShardoDatePicker(element, optionsFromAttributes(element));
+      const options = optionsFromAttributes(element);
+
+      if (!options) {
+        return null;
+      }
+
+      element.shardoDatePicker = new ShardoDatePicker(element, options);
       return element.shardoDatePicker;
-    });
+    }).filter(Boolean);
+  }
+
+  static setDefaults(options = {}, applyToExisting = false, root = null) {
+    const resolved = resolveOptionSource(options);
+    globalDefaults = { ...globalDefaults, ...resolved };
+
+    if (applyToExisting && typeof document !== "undefined") {
+      ShardoDatePicker.instances(root || document).forEach((picker) => picker.setOptions(resolved));
+    }
+
+    return ShardoDatePicker.getDefaults();
+  }
+
+  static configure(options = {}, applyToExisting = false, root = null) {
+    return ShardoDatePicker.setDefaults(options, applyToExisting, root);
+  }
+
+  static getDefaults() {
+    return { ...defaultOptions() };
+  }
+
+  static resetDefaults() {
+    globalDefaults = {};
+    return ShardoDatePicker.getDefaults();
+  }
+
+  static instances(root = null) {
+    const source = root || (typeof document !== "undefined" ? document : null);
+    return source ? [...source.querySelectorAll("[data-shardo-datepicker]")].map((element) => element.shardoDatePicker).filter(Boolean) : [];
   }
 }
 
@@ -1604,8 +1958,12 @@ if (typeof window !== "undefined") {
   window.ShardoDatePickerUtils = ShardoDatePickerUtils;
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => ShardoDatePicker.autoInit());
-  } else {
+    document.addEventListener("DOMContentLoaded", () => {
+      if (defaultOptions().autoInit) {
+        ShardoDatePicker.autoInit();
+      }
+    });
+  } else if (defaultOptions().autoInit) {
     ShardoDatePicker.autoInit();
   }
 }

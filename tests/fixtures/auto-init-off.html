@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/src/ShardoDatePicker.css">
+    <script>
+      window.ShardoDatePickerDefaults = {
+        autoInit: false,
+        showTime: false,
+        autoClose: true,
+        format: "yyyy/MM/dd",
+        gregorianFormat: "yyyy-MM-dd"
+      };
+    </script>
+  </head>
+  <body>
+    <label for="autoOffPicker">auto off picker</label>
+    <input id="autoOffPicker" data-shardo-datepicker value="2026-05-03">
+    <script type="module">
+      import "/src/ShardoDatePicker.js";
+      window.ready = true;
+    </script>
+  </body>
+</html>
